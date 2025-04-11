@@ -2,23 +2,14 @@
     <nav class="bg-white w-64 p-6 text-gray-800 border-r border-gray-200 shadow-md fixed h-full top-0 left-0">
       <ul class="space-y-2">
         <li>
-          <a href="/dashboard" (click)="goTo($event, '/dashboard')"
-             class="flex items-center gap-2 px-3 py-2 rounded hover:bg-gray-50 transition">
+          <a routerLink="/dashboard" class="flex items-center gap-2 px-3 py-2 rounded hover:bg-gray-50 transition">
             <i class="fas fa-th-large"></i>
             <span>Tableau de bord</span>
           </a>
         </li>
-          <a href="/api" (click)="goTo($event, '/api')"
-             class="flex items-center gap-2 px-3 py-2 rounded hover:bg-gray-50 transition">
-            <i class="fas fa-cogs"></i>
-            <span>API</span>
-          </a>
       </ul>
     </nav>
-  
-    <!-- Main content -->
     <div class="ml-64 p-6 w-full bg-gray-50 min-h-screen">
       <router-outlet></router-outlet>
     </div>
-  </div>
-  
+</div>
