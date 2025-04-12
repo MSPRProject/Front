@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { AfterViewInit, ElementRef, ViewChild } from '@angular/core';
-import { Chart, BarController, BarElement, CategoryScale, LinearScale, Tooltip, Legend, ChartConfiguration, LineController, LineElement, PointElement } from 'chart.js';
+import { Chart, BarController, BarElement, CategoryScale, LinearScale, Tooltip, Legend, ChartConfiguration, LineController, LineElement, PointElement, PieController, ArcElement, scales  } from 'chart.js';
 import { CommonModule } from '@angular/common';
-Chart.register(BarController, BarElement, CategoryScale, LinearScale, Tooltip, Legend, LineElement, LineController, PointElement);
+Chart.register(BarController, BarElement, CategoryScale, LinearScale, Tooltip, Legend, LineElement, LineController, PointElement, PieController, ArcElement);
 
 @Component({
   selector: 'app-root',
@@ -11,15 +11,18 @@ Chart.register(BarController, BarElement, CategoryScale, LinearScale, Tooltip, L
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
-export class AppComponent {
+export class AppComponent implements AfterViewInit {
   title = 'Sanalyz';
   chart!: Chart;
   barchart!: Chart;
   linebar!: Chart;
   piechart!: Chart;
+  comboChart!: Chart;
+
     @ViewChild('chart') ChartRef!: ElementRef<HTMLCanvasElement>;
     @ViewChild('chart2') linebarRef!: ElementRef<HTMLCanvasElement>;
     @ViewChild('chart3') piechartRef!: ElementRef<HTMLCanvasElement>;
+    @ViewChild('chart4') comboChartRef!: ElementRef<HTMLCanvasElement>;
 
     ngAfterViewInit() {
     let barchart: ChartConfiguration<'bar'> = {
@@ -72,8 +75,61 @@ export class AppComponent {
         maintainAspectRatio: false,
       }
     };
-    this.barchart = new Chart(this.ChartRef.nativeElement, barchart);
-    this.linebar = new Chart(this.linebarRef.nativeElement, linebar);
-    this.piechart = new Chart(this.linebarRef.nativeElement, pieChart);
+
+    let comboChart: ChartConfiguration = {
+      type: 'bar',
+      data: {
+        labels: ['Janvier', 'Février', 'Mars', 'Avril'],
+        datasets: [
+          {
+            type: 'bar',
+            label: 'Ventes',
+            data: [30, 50, 40, 60],
+            backgroundColor: '#60a2fa',
+            borderRadius: 10
+          },
+          {
+            type: 'line',
+            label: 'Tendance',
+            data: [35, 45, 50, 55],
+            borderColor: '#f64d4d',
+            backgroundColor: '#f64d4d',
+            fill: false,
+            tension: 0.4,
+            pointRadius: 5
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            display: true
+          }
+        },
+        scales: {
+          y: {
+            beginAtZero: true
+          }
+        }
+      }
+    };
+
+
+    if(!this.barchart){
+      this.barchart = new Chart(this.ChartRef.nativeElement, barchart);
+    }
+    
+    if(!this.linebar){
+      this.linebar = new Chart(this.linebarRef.nativeElement, linebar);
+    }
+    if(!this.piechart){
+      this.piechart = new Chart(this.piechartRef.nativeElement, pieChart);
+    }
+
+    if(!this.comboChart){
+      this.comboChart = new Chart(this.comboChartRef.nativeElement, comboChart);
+    }
   }
 }

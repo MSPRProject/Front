@@ -1,20 +1,36 @@
-<main>
-  <div class="max-w-md mx-auto bg-white rounded-2xl shadow-lg p-6">
-    <div class="h-64">
+<main class="flex flex-col items-center justify-center space-y-4">
+  <!-- Grille responsive pour aligner les cartes sur la même ligne -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+
+    <!-- Première carte avec le graphique 1 -->
+    <div class="bg-white rounded-2xl shadow-lg p-6">
+      <div class="h-64">
         <canvas #chart class="w-full h-full"></canvas>
-    </div> 
-  </div>
-  <br>
-  <div class="max-w-md mx-auto bg-white rounded-2xl shadow-lg p-6">
-    <div class="h-64">
-        <canvas #chart2 class="w-full h-full"></canvas>
-    </div> 
-  </div> 
-  <br>
-  <div class="max-w-md mx-auto bg-white rounded-2xl shadow-lg p-6">
-    <div class="h-64">
-        <canvas #chart3 class="w-full h-full"></canvas>
+      </div>
     </div>
+
+    <!-- Deuxième carte avec le graphique 2 -->
+    <div class="bg-white rounded-2xl shadow-lg p-6">
+      <div class="h-64">
+        <canvas #chart2 class="w-full h-full"></canvas>
+      </div>
+    </div>
+
+    <!-- Troisième carte avec le graphique 3 (nouvelle ligne) -->
+    <div class="bg-white rounded-2xl shadow-lg p-6">
+      <div class="h-64">
+        <canvas #chart3 class="w-full h-full"></canvas>
+      </div>
+    </div>
+
+    <!-- Quatrième carte avec le graphique 4 -->
+    <div class="bg-white rounded-2xl shadow-lg p-6">
+      <div class="h-64">
+        <canvas #chart4 class="w-full h-full"></canvas>
+      </div>
+    </div>
+
   </div>
+
   <router-outlet/>
 </main>
