@@ -1,193 +1,246 @@
-import { Component, OnInit, NgModule } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
-import { AfterViewInit, ElementRef, ViewChild } from '@angular/core';
-import { Chart, BarController, BarElement, CategoryScale, LinearScale, Tooltip, Legend, ChartConfiguration, LineController, LineElement, PointElement, PieController, ArcElement, scales  } from 'chart.js';
+import {
+  Component,
+  AfterViewInit,
+  ElementRef,
+  ViewChildren,
+  QueryList
+} from '@angular/core';
+import { RouterOutlet, Router } from '@angular/router';
+import {
+  Chart,
+  BarController,
+  BarElement,
+  CategoryScale,
+  LinearScale,
+  Tooltip,
+  Legend,
+  LineController,
+  LineElement,
+  PointElement,
+  PieController,
+  ArcElement,
+  ChartConfiguration
+} from 'chart.js';
 import { CommonModule } from '@angular/common';
-import { BrowserModule } from '@angular/platform-browser';
-import { Router } from '@angular/router';
-Chart.register(BarController, BarElement, CategoryScale, LinearScale, Tooltip, Legend, LineElement, LineController, PointElement, PieController, ArcElement);
+import { HttpClientModule, HttpClient } from '@angular/common/http';
+
+Chart.register(
+  BarController,
+  BarElement,
+  CategoryScale,
+  LinearScale,
+  Tooltip,
+  Legend,
+  LineElement,
+  LineController,
+  PointElement,
+  PieController,
+  ArcElement
+);
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, CommonModule],
+  imports: [RouterOutlet, CommonModule, HttpClientModule],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements AfterViewInit {
-  constructor(private router: Router){}
+  constructor(private router: Router, private http: HttpClient) {}
+
   title = 'Sanalyz';
-  chart!: Chart;
-  barchart!: Chart;
-  linebar!: Chart;
-  piechart!: Chart;
-  comboChart!: Chart;
-  isDarkMode: boolean = false;
   showPopup = false;
-  selectedChartId: string = '';
-  get isSwaggerRoute() {
+  selectedChartId = '';
+  popupChart?: Chart;
+  chartInstances: Chart[] = [];
+
+  @ViewChildren('chart') chartRefs!: QueryList<ElementRef<HTMLCanvasElement>>;
+
+  get isSwaggerRoute(): boolean {
     return this.router.url.includes('/swagger');
   }
-  ngOnInit() 
-  {
-    const savedTheme = localStorage.getItem('theme'); 
-    if (savedTheme === 'dark') {
-      this.enableDarkMode();
-      document.body.classList.add("dark-mode");
-    }
-    else {
-      this.isDarkMode = false;
-      document.body.classList.remove("dark-mode");
-    }
-  }
-  enableDarkMode()
-  {
-    document.body.classList.add("dark-mode");
-    localStorage.setItem('theme', 'dark');
-  }
 
-  disableDarkMode()
-  {
-    document.body.classList.remove("dark-mode");
-    localStorage.setItem('theme', 'light');
-  }
-
-  toggleTheme()
-  { 
-    this.isDarkMode = !this.isDarkMode;
-    if (this.isDarkMode) 
-    {
-      this.enableDarkMode();
-    }
-    else
-    {
-      this.disableDarkMode();
-    }
-  }
-   onCardClick() {
-    console.log('Card clicked!');
-  }
-
-  openPopup(chartId: string){
+  openPopup(chartId: string): void {
     this.selectedChartId = chartId;
     this.showPopup = true;
+  
+    const exampleData = {
+      labels: ['A', 'B', 'C'],
+      values: [10, 20, 30]
+    };
+  
+    // Attendre un cycle de rendu pour que le canvas soit disponible dans le DOM
+    setTimeout(() => {
+      this.renderPopupChart(chartId, exampleData);
+    }, 0);
   }
+  
 
-  closePopup() {
+  renderPopupChart(chartId: string, data: { labels: string[], values: number[] }): void {
+    const canvas = document.getElementById('popupChart') as HTMLCanvasElement;
+    if (!canvas) return;
+  
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+  
+    // Configuration du graphique en fonction du type
+    let chartConfig: any;
+  
+    if (chartId === 'mixed') {
+      chartConfig = {
+        type: 'mixed',
+        data: {
+          labels: data.labels,
+          datasets: [
+            {
+              type: 'bar',  // Premier dataset, type bar
+              label: 'Bar Dataset',
+              data: data.values,
+              backgroundColor: '#3B82F6',
+              borderColor: '#333',
+              borderWidth: 1
+            },
+            {
+              type: 'line', // Deuxième dataset, type line
+              label: 'Line Dataset',
+              data: data.values.map(value => value * 2), // On peut multiplier les valeurs pour l'exemple
+              fill: false,
+              borderColor: '#10B981',
+              borderWidth: 2
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false
+        }
+      };
+    } else {
+      chartConfig = {
+        type: chartId as any,
+        data: {
+          labels: data.labels,
+          datasets: [{
+            label: 'Données exemple',
+            data: data.values,
+            backgroundColor: ['#3B82F6', '#10B981', '#F59E0B'],
+            borderColor: '#333',
+            borderWidth: 1
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false
+        }
+      };
+    }
+  
+    // Créer le graphique
+    new Chart(ctx, chartConfig);
+  }
+  
+  
+
+  closePopup(): void {
     this.showPopup = false;
+    this.popupChart?.destroy();
   }
 
-    @ViewChild('chart') ChartRef!: ElementRef<HTMLCanvasElement>;
-    @ViewChild('chart2') linebarRef!: ElementRef<HTMLCanvasElement>;
-    @ViewChild('chart3') piechartRef!: ElementRef<HTMLCanvasElement>;
-    @ViewChild('chart4') comboChartRef!: ElementRef<HTMLCanvasElement>;
-
-    ngAfterViewInit() {
-    let barchart: ChartConfiguration<'bar'> = {
-      type: 'bar',
-      data: {
-        labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-        datasets: [
-          {
-            data: [65, 59, 80],
-            backgroundColor: ['#60a2fa', '#f6a02d', '#f6a02d'],
-          }
-        ]
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-      }
-    };
-
-    let linebar: ChartConfiguration<'line'> = {
-      type: 'line',
-      data: {
-        labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-        datasets: [
-          {
-            data: [65, 59, 80],
-            backgroundColor: ['#60a2fa', '#f6a02d', '#f6a02d'],
-          }
-        ]
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-      }
-    };
-
-    let pieChart: ChartConfiguration<'pie'> = {
-      type: 'pie',
-      data: {
-        labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-        datasets: [
-          {
-            data: [65, 59, 80],
-            backgroundColor: ['#60a2fa', '#f6a02d', '#f6a02d'],
-          }
-        ]
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-      }
-    };
-
-    let comboChart: ChartConfiguration = {
-      type: 'bar',
-      data: {
-        labels: ['Janvier', 'Février', 'Mars', 'Avril'],
-        datasets: [
-          {
-            type: 'bar',
-            label: 'Ventes',
-            data: [30, 50, 40, 60],
-            backgroundColor: '#60a2fa',
-            borderRadius: 10
+  ngAfterViewInit(): void {
+    setTimeout(() => {
+      const chartConfigs: ChartConfiguration[] = [
+        {
+          type: 'bar',
+          data: {
+            labels: ['Jan', 'Feb', 'Mar'],
+            datasets: [{
+              data: [65, 59, 80],
+              backgroundColor: ['#60a2fa', '#f6a02d', '#f64d4d']
+            }]
           },
-          {
-            type: 'line',
-            label: 'Tendance',
-            data: [35, 45, 50, 55],
-            borderColor: '#f64d4d',
-            backgroundColor: '#f64d4d',
-            fill: false,
-            tension: 0.4,
-            pointRadius: 5
-          }
-        ]
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-          legend: {
-            display: true
+          options: {
+            responsive: true,
+            maintainAspectRatio: false
           }
         },
-        scales: {
-          y: {
-            beginAtZero: true
+        {
+          type: 'line',
+          data: {
+            labels: ['Jan', 'Feb', 'Mar'],
+            datasets: [{
+              data: [30, 40, 50],
+              borderColor: '#f64d4d',
+              backgroundColor: 'rgba(246, 77, 77, 0.2)',
+              fill: false,
+              tension: 0.4,
+              pointRadius: 5
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false
+          }
+        },
+        {
+          type: 'pie',
+          data: {
+            labels: ['Jan', 'Feb', 'Mar'],
+            datasets: [{
+              data: [15, 30, 55],
+              backgroundColor: ['#60a2fa', '#f6a02d', '#f64d4d']
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false
+          }
+        },
+        {
+          type: 'bar',
+          data: {
+            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May'],
+            datasets: [
+              {
+                type: 'bar',
+                label: 'Ventes',
+                data: [30, 50, 40, 60, 70],
+                backgroundColor: '#60a2fa',
+                borderRadius: 10
+              },
+              {
+                type: 'line',
+                label: 'Tendance',
+                data: [35, 45, 50, 55, 60],
+                borderColor: '#f64d4d',
+                backgroundColor: '#f64d4d',
+                fill: false,
+                tension: 0.4,
+                pointRadius: 5
+              }
+            ]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: { display: true }
+            },
+            scales: {
+              y: {
+                beginAtZero: true
+              }
+            }
           }
         }
-      }
-    };
+      ];
 
-
-    if(!this.barchart){
-      this.barchart = new Chart(this.ChartRef.nativeElement, barchart);
-    }
-    
-    if(!this.linebar){
-      this.linebar = new Chart(this.linebarRef.nativeElement, linebar);
-    }
-    if(!this.piechart){
-      this.piechart = new Chart(this.piechartRef.nativeElement, pieChart);
-    }
-
-    if(!this.comboChart){
-      this.comboChart = new Chart(this.comboChartRef.nativeElement, comboChart);
-    }
+      this.chartRefs.forEach((chartRef, index) => {
+        const ctx = chartRef.nativeElement.getContext('2d');
+        if (ctx && chartConfigs[index]) {
+          const chart = new Chart(ctx, chartConfigs[index]);
+          this.chartInstances.push(chart);
+        }
+      });
+    });
   }
 }

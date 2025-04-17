@@ -1,6 +1,6 @@
 <div class="flex h-screen">
   <!-- Sidebar -->
-  <nav class="bg-white w-64 p-6 text-gray-800 border-r border-gray-200 shadow-md fixed h-full top-0 left-0 transition-all duration-300 ease-in-out"
+  <nav class="bg-white w-64 p-6 text-gray-800 border-r border-gray-200 shadow-md fixed h-full top-0 left-0 transition-all duration-300 ease-in-out z-0"
        [class.hidden]="!isSidebarOpen" [class.block]="isSidebarOpen" [class.hidden]="isSidebarClosed">
     <!-- Button to toggle sidebar visibility on small screens -->
     <div class="lg:hidden mb-4">
@@ -27,7 +27,7 @@
   </nav>
 
   <!-- Main Content -->
-  <div class="p-6 transition-all duration-300 ease-in-out w-full">
+  <div class="p-6 ml-64 transition-all duration-300 ease-in-out w-full">
     <router-outlet></router-outlet>
   </div>
 </div>
