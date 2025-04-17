@@ -1,15 +1,33 @@
 <div class="flex h-screen">
-    <nav class="bg-white w-64 p-6 text-gray-800 border-r border-gray-200 shadow-md fixed h-full top-0 left-0">
-      <ul class="space-y-2">
-        <li>
-          <a routerLink="/dashboard" class="flex items-center gap-2 px-3 py-2 rounded hover:bg-gray-50 transition">
-            <i class="fas fa-th-large"></i>
-            <span>Tableau de bord</span>
-          </a>
-        </li>
-      </ul>
-    </nav>
-    <div class="ml-64 p-6 w-full bg-gray-50 min-h-screen">
-      <router-outlet></router-outlet>
+  <!-- Sidebar -->
+  <nav class="bg-white w-64 p-6 text-gray-800 border-r border-gray-200 shadow-md fixed h-full top-0 left-0 transition-all duration-300 ease-in-out"
+       [class.hidden]="!isSidebarOpen" [class.block]="isSidebarOpen" [class.hidden]="isSidebarClosed">
+    <!-- Button to toggle sidebar visibility on small screens -->
+    <div class="lg:hidden mb-4">
+      <button class="text-gray-800" (click)="toggleSidebar()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" class="feather feather-menu" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 12h18M3 6h18M3 18h18"></path>
+        </svg>
+      </button>
     </div>
+    <ul class="space-y-2">
+      <li>
+        <a routerLink="/dashboard" class="flex items-center gap-2 px-3 py-2 rounded hover:bg-gray-50 transition">
+          <i class="fas fa-th-large"></i>
+          <span>Tableau de bord</span>
+        </a>
+      </li>
+      <li>
+        <a href="http://localhost:8080/swagger-ui/index.html#/" class="flex items-center gap-2 px-3 py-2 rounded hover:bg-gray-50 transition">
+          <i class="fas fa-th-large"></i>
+          <span>Doc API</span>
+        </a>
+      </li>
+    </ul>
+  </nav>
+
+  <!-- Main Content -->
+  <div class="p-6 transition-all duration-300 ease-in-out w-full">
+    <router-outlet></router-outlet>
+  </div>
 </div>

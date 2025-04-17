@@ -1,9 +1,7 @@
-import { Routes } from '@angular/router';
+import { RouterModule, Routes } from '@angular/router';
 import { LandingComponent } from './pages/landing/landing.component';
-import { SidebarComponent } from './layout/sidebar/sidebar.component';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
-import { ApiComponent } from './pages/api/api.component';
-
+import { SwaggerComponent } from './swagger/swagger.component';
 export const appRoutes: Routes = [
     {
         path: '',
@@ -18,8 +16,8 @@ export const appRoutes: Routes = [
     },
 
     {
-        path: 'api',
-        component: ApiComponent,
+        path: 'swagger',
+        component: SwaggerComponent,
         pathMatch: 'full',
     }
 ];

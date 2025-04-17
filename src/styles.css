@@ -1,3 +1,32 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+:root{
+    --darkMode: #000000;
+}
+
+body.dark-mode
+{
+    background-color: var(--darkMode);
+    color: white;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+  
+body.dark-mode nav 
+{
+    background-color: var(--darkMode);
+    color: white;
+    border-color: #222; /* optionnel pour un effet un peu moins tranché */
+}
+  
+body.dark-mode nav a
+{
+    color: white;
+}
+  
+body.dark-mode nav a:hover
+{
+    background-color: #111; /* un petit gris très foncé pour hover */
+}
+  

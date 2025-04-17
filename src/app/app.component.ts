@@ -1,23 +1,81 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, NgModule } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { AfterViewInit, ElementRef, ViewChild } from '@angular/core';
 import { Chart, BarController, BarElement, CategoryScale, LinearScale, Tooltip, Legend, ChartConfiguration, LineController, LineElement, PointElement, PieController, ArcElement, scales  } from 'chart.js';
 import { CommonModule } from '@angular/common';
+import { BrowserModule } from '@angular/platform-browser';
+import { Router } from '@angular/router';
 Chart.register(BarController, BarElement, CategoryScale, LinearScale, Tooltip, Legend, LineElement, LineController, PointElement, PieController, ArcElement);
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet],
+  standalone: true,
+  imports: [RouterOutlet, CommonModule],
   templateUrl: './app.component.html',
-  styleUrl: './app.component.css'
+  styleUrls: ['./app.component.css']
 })
 export class AppComponent implements AfterViewInit {
+  constructor(private router: Router){}
   title = 'Sanalyz';
   chart!: Chart;
   barchart!: Chart;
   linebar!: Chart;
   piechart!: Chart;
   comboChart!: Chart;
+  isDarkMode: boolean = false;
+  showPopup = false;
+  selectedChartId: string = '';
+  get isSwaggerRoute() {
+    return this.router.url.includes('/swagger');
+  }
+  ngOnInit() 
+  {
+    const savedTheme = localStorage.getItem('theme'); 
+    if (savedTheme === 'dark') {
+      this.enableDarkMode();
+      document.body.classList.add("dark-mode");
+    }
+    else {
+      this.isDarkMode = false;
+      document.body.classList.remove("dark-mode");
+    }
+  }
+  enableDarkMode()
+  {
+    document.body.classList.add("dark-mode");
+    localStorage.setItem('theme', 'dark');
+  }
+
+  disableDarkMode()
+  {
+    document.body.classList.remove("dark-mode");
+    localStorage.setItem('theme', 'light');
+  }
+
+  toggleTheme()
+  { 
+    this.isDarkMode = !this.isDarkMode;
+    if (this.isDarkMode) 
+    {
+      this.enableDarkMode();
+    }
+    else
+    {
+      this.disableDarkMode();
+    }
+  }
+   onCardClick() {
+    console.log('Card clicked!');
+  }
+
+  openPopup(chartId: string){
+    this.selectedChartId = chartId;
+    this.showPopup = true;
+  }
+
+  closePopup() {
+    this.showPopup = false;
+  }
 
     @ViewChild('chart') ChartRef!: ElementRef<HTMLCanvasElement>;
     @ViewChild('chart2') linebarRef!: ElementRef<HTMLCanvasElement>;
