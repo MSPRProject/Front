@@ -1,6 +1,6 @@
 :host {
-  min-height: 100%;
-  height: auto;
   display: flex;
+  flex-grow: 1;
   flex-direction: column;
+  height: 100%;
 }

@@ -1,26 +1,20 @@
-<<<<<<< Updated upstream
-import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
-import { RouterOutlet } from '@angular/router';
-=======
 import { CommonModule } from "@angular/common";
-import { Component, EventEmitter, OnInit, Output } from "@angular/core";
->>>>>>> Stashed changes
+import { Component, OnInit } from "@angular/core";
 
 @Component({
-  selector: 'app-header',
-  templateUrl: './header.component.html',
-  imports: [CommonModule, RouterOutlet],
-  styleUrls: ['./header.component.css']
+  selector: "app-header",
+  templateUrl: "./header.component.html",
+  standalone: true,
+  imports: [CommonModule],
+  styleUrls: ["./header.component.css"],
 })
 export class HeaderComponent implements OnInit {
-  @Output() themeChanged = new EventEmitter<boolean>();
   isDarkMode = false;
+  htmlElement: HTMLElement = document.documentElement;
 
   ngOnInit() {
-    const savedTheme = localStorage.getItem('theme');
-    if (savedTheme === 'dark') {
+    const savedTheme = localStorage.getItem("theme");
+    if (savedTheme === "dark") {
       this.enableDarkMode();
     } else {
       this.disableDarkMode();
@@ -28,17 +22,15 @@ export class HeaderComponent implements OnInit {
   }
 
   enableDarkMode() {
-    document.body.classList.add("dark-mode");
-    localStorage.setItem('theme', 'dark');
+    this.htmlElement.classList.add("dark"); // ← remplace 'dark-mode' par 'dark'
+    localStorage.setItem("theme", "dark");
     this.isDarkMode = true;
-    this.themeChanged.emit(this.isDarkMode);
   }
 
   disableDarkMode() {
-    document.body.classList.remove("dark-mode");
-    localStorage.setItem('theme', 'light');
+    this.htmlElement.classList.remove("dark"); // ← remplace 'dark-mode' par 'dark'
+    localStorage.setItem("theme", "light");
     this.isDarkMode = false;
-    this.themeChanged.emit(this.isDarkMode);
   }
 
   toggleTheme() {

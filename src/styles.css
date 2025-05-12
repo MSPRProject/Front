@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 :root{
-    --darkMode: #000000;
+    --darkMode: rgb(22, 22, 22);
 }
 
 body.dark-mode

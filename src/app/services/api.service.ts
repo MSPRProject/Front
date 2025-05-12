@@ -1,107 +1,225 @@
-import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Injectable } from "@angular/core";
+import { HttpClient, HttpHeaders, HttpResponse } from "@angular/common/http";
+import { Observable, of } from "rxjs";
+import { map, catchError } from "rxjs/operators";
+import { Pandemic } from "../models/pandemic";
+import { Country } from "../models/country";
+
+interface ApiGenericResponseList {
+  _embedded: { [key: string]: any };
+}
+
+interface ApiPandemicResponse {
+  id: number;
+  name: string;
+  pathogen?: string;
+  description?: string;
+  notes?: string;
+  start_date?: Date;
+  end_date?: Date;
+  _links: { self: { href: string } };
+}
+
+interface ApiCountryResponse {
+  id: number;
+  continent: string;
+  name: string;
+  iso3: string;
+  population: number;
+  _links: { self: { href: string } };
+}
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: "root",
 })
 export class ApiService {
-  private apiUrl = 'http://localhost:8080';
-  private swaggerUrl = 'http://localhost:8080/swagger-ui/index.html#/';
-  constructor(private http: HttpClient) { }
-  
-  getSwaggerUrl(): string {
-    return this.swaggerUrl;
-  }
-  getCountries(): Observable<any>
-  {
-    return this.http.get(`${this.apiUrl}/countries`);
+  private apiUrl = "http://localhost:8080";
+
+  constructor(private http: HttpClient) {}
+
+  getPandemicComparison(): Observable<any> {
+    return this.http
+      .get<
+        HttpResponse<any>
+      >(`${this.apiUrl}/api/charts/pandemicComparison`, { observe: "response" })
+      .pipe(
+        map((response: HttpResponse<any>) => this.handleResponse(response)),
+        catchError((error) => this.handleError(error)),
+      );
   }
 
-  getPandemics(): Observable<any>
-  {
-    return this.http.get(`${this.apiUrl}/pandemics`);
-  }
-  
-  getInfectionByPandemics(): Observable<any>
-  {
-    return this.http.get(`${this.apiUrl}/infections/pandemics/{id}`);
-  }
-
-  getInfectionByCountries(): Observable<any>
-  {
-    return this.http.get(`${this.apiUrl}/infections/countries/{id}`);
-  }
-
-  getReportsBypandemics(): Observable<any>
-  {
-    return this.http.get(`${this.apiUrl}/reports/pandemics/{id}`);
+  getInfectionByContinent(pandemicId: number): Observable<any> {
+    return this.http
+      .get<HttpResponse<any>>(
+        `${this.apiUrl}/api/charts/infectionDistributionByContinent`,
+        {
+          params: {
+            pandemicId,
+          },
+          observe: "response",
+        },
+      )
+      .pipe(
+        map((response: HttpResponse<any>) => this.handleResponse(response)),
+        catchError((error) => this.handleError(error)),
+      );
   }
 
-  getReportsByCountries(): Observable<any> 
-  {
-    return this.http.get(`${this.apiUrl}/reports/countries/{id}`);
+  getTop10CountriesByDeathAndCases(pandemicId?: number): Observable<any> {
+    let params: any = {};
+    if (pandemicId !== undefined) {
+      params["pandemicId"] = pandemicId;
+    }
+
+    return this.http
+      .get<HttpResponse<any>>(
+        `${this.apiUrl}/api/charts/top10CountriesByCasesOrDeaths`,
+        {
+          observe: "response",
+          params,
+        },
+      )
+      .pipe(
+        map((response: HttpResponse<any>) => this.handleResponse(response)),
+        catchError((error) => this.handleError(error)),
+      );
   }
 
-  getReportByDate(): Observable<any>
-  {
-    return this.http.get(`${this.apiUrl}/reports/date/{date}`);
+  getDeathByCountryAndPandemic(): Observable<any> {
+    return this.http
+      .get<
+        HttpResponse<any>
+      >(`${this.apiUrl}/api/charts/totalCasesDeathsByCountryAndPandemic`, { observe: "response" })
+      .pipe(
+        map((response: HttpResponse<any>) => this.handleResponse(response)),
+        catchError((error) => this.handleError(error)),
+      );
   }
 
-  postCountries(data: any): Observable<any>
-  {
-    return this.http.post(`${this.apiUrl}/countries`, data);
-  }
-  
-  postPandemics(data: any): Observable<any>
-  {
-    return this.http.post(`${this.apiUrl}/pandemics`, data);
-  }
-
-  postInfection(data: any): Observable<any>
-  {
-    return this.http.post(`${this.apiUrl}/infections`, data);
-  }
-
-  patchCountries(id: number, data: any): Observable<any>
-  {
-    return this.http.patch(`${this.apiUrl}/countries/${id}`, data);
-  }
-
-  patchPandemics(id: number, data: any): Observable<any>
-  {
-    return this.http.patch(`${this.apiUrl}/pandemics/${id}`, data);
+  getNewCasesDeathOverTime(
+    countryId: number,
+    pandemicId: number,
+  ): Observable<any> {
+    return this.http
+      .get<HttpResponse<any>>(
+        `${this.apiUrl}/api/charts/newCasesDeathsOverTime`,
+        {
+          observe: "response",
+          params: {
+            countryId,
+            pandemicId,
+          },
+        },
+      )
+      .pipe(
+        map((response: HttpResponse<any>) => this.handleResponse(response)),
+        catchError((error) => this.handleError(error)),
+      );
   }
 
-  patchInfections(id: number, data: any): Observable<any>
-  {
-    return this.http.patch(`${this.apiUrl}/infections/${id}`, data);
+  pruneChartCache(): Observable<any> {
+    return this.http.get<HttpResponse<any>>(
+      `${this.apiUrl}/api/charts/pruneCaches`,
+      { observe: "response" },
+    );
   }
 
-  patchReports(id: number, data: any): Observable<any>
-  {
-    return this.http.patch(`${this.apiUrl}/reports/${id}`, data);
+  getAllPandemics(): Observable<Pandemic[]> {
+    return this.http
+      .get<ApiGenericResponseList>(`${this.apiUrl}/pandemics`)
+      .pipe(
+        map((data) =>
+          data._embedded["pandemics"].map(
+            (pandemic: ApiPandemicResponse) =>
+              ({
+                id: pandemic.id,
+                name: pandemic.name,
+                pathogen: pandemic.pathogen,
+                startDate: pandemic.start_date,
+                endDate: pandemic.end_date,
+                description: pandemic.description,
+                notes: pandemic.notes,
+                link: pandemic._links.self.href,
+              }) as Pandemic,
+          ),
+        ),
+      );
   }
 
-  deleteCountries(id: number): Observable<any>
-  {
-    return this.http.delete(`${this.apiUrl}/countries/${id}`);
+  getAllCountries(): Observable<Country[]> {
+    return this.http
+      .get<ApiGenericResponseList>(`${this.apiUrl}/countries`)
+      .pipe(
+        map((data) =>
+          data._embedded["countries"].map(
+            (country: ApiCountryResponse) =>
+              ({
+                id: country.id,
+                link: country._links.self.href,
+                continent: country.continent,
+                name: country.name,
+                iso3: country.iso3,
+                population: country.population,
+              }) as Country,
+          ),
+        ),
+      );
   }
 
-  deletePandemics(id: number): Observable<any>
-  {
-    return this.http.delete(`${this.apiUrl}/pandemics/${id}`);
+  downloadData(format: "json" | "csv"): void {
+    const headers = new HttpHeaders({
+      Accept: format === "csv" ? "text/csv" : "application/json",
+      "Content-Type": format === "csv" ? "text/csv" : "application/json",
+    });
+
+    this.http
+      .get(`${this.apiUrl}/export`, {
+        headers,
+        responseType: "blob",
+      })
+      .subscribe(
+        (response: Blob) => {
+          const blob = new Blob([response], {
+            type: format === "csv" ? "text/csv" : "application/json",
+          });
+          const url = window.URL.createObjectURL(blob);
+          const a = document.createElement("a");
+          a.href = url;
+          a.download = `data.${format}`;
+          a.click();
+          window.URL.revokeObjectURL(url);
+        },
+        (error) => {
+          console.error("Error downloading file:", error);
+        },
+      );
   }
 
-  deleteInfections(id: number): Observable<any>
-  {
-    return this.http.delete(`${this.apiUrl}/infections/${id}`);
+  // Fonction pour gérer les réponses de l'API
+  private handleResponse(response: HttpResponse<any>): any {
+    console.log(response);
+    if (response.status === 200) {
+      return {
+        data: response.body,
+        status: "loaded",
+      };
+    } else if (response.status === 202) {
+      return {
+        status: "loading",
+      };
+    } else {
+      return {
+        status: "unknown",
+      };
+    }
   }
 
-  deleteReports(id: number): Observable<any>
-  {
-    return this.http.delete(`${this.apiUrl}/reports/${id}`);
+  // Fonction pour gérer les erreurs
+  private handleError(error: any): Observable<any> {
+    console.log("test");
+    console.error("Error fetching data:", error);
+    return of({
+      status: "error",
+    });
   }
-
-
 }

@@ -1,43 +1,9 @@
-<<<<<<< Updated upstream
-<main class="flex flex-col items-center justify-start min-h-screen space-y-4 px-4 pt-20 ml-64">
-  <div class="w-full max-w-6xl mx-auto">
-    <div class="grid grid-cols-2 gap-6">
-      <!-- Cartes pour les graphiques -->
-      <ng-container *ngFor="let chartId of ['bar', 'line', 'pie', 'mixed']">
-        <div
-          class="cursor-pointer transition-transform transform hover:scale-105 duration-300 shadow-lg rounded-2xl p-6 bg-white dark:bg-neutral-900 scale-95"
-          (click)="openPopup(chartId)">
-          <canvas #chart class="w-full h-64"></canvas>
-        </div>
-      </ng-container>
-=======
 <div class="min-h-screen flex flex-row w-full h-full">
   <app-sidebar />
   <div class="flex flex-col flex-grow">
-    <app-header (themeChanged)="onThemeChanged($event)" />
+    <app-header />
     <div class="flex-grow">
       <router-outlet />
->>>>>>> Stashed changes
     </div>
   </div>
-
-  <!-- Popup pour le graphique sélectionné -->
-  <div
-    *ngIf="showPopup"
-    class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 transition-opacity duration-300 ease-in-out">
-    <div
-      class="bg-white dark:bg-neutral-800 rounded-xl p-6 w-[90%] max-w-3xl relative transition-opacity duration-300 ease-in-out"
-      [class.opacity-100]="showPopup"
-      [class.opacity-0]="!showPopup">
-      <button
-        class="absolute top-2 right-2 text-gray-600 text-xl hover:text-red-500"
-        (click)="closePopup()">✖</button>
-      <h2 class="text-2xl font-semibold mb-4 text-center">Graphique sélectionné</h2>
-      <div class="w-full h-96">
-        <canvas id="popupChart" class="w-full h-full"></canvas>
-      </div>
-    </div>
-  </div>
-
-  <router-outlet></router-outlet>
-</main>
+</div>
