@@ -1,7 +1,12 @@
+<<<<<<< Updated upstream
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { RouterOutlet } from '@angular/router';
+=======
+import { CommonModule } from "@angular/common";
+import { Component, EventEmitter, OnInit, Output } from "@angular/core";
+>>>>>>> Stashed changes
 
 @Component({
   selector: 'app-header',
@@ -10,6 +15,7 @@ import { RouterOutlet } from '@angular/router';
   styleUrls: ['./header.component.css']
 })
 export class HeaderComponent implements OnInit {
+  @Output() themeChanged = new EventEmitter<boolean>();
   isDarkMode = false;
 
   ngOnInit() {
@@ -25,12 +31,14 @@ export class HeaderComponent implements OnInit {
     document.body.classList.add("dark-mode");
     localStorage.setItem('theme', 'dark');
     this.isDarkMode = true;
+    this.themeChanged.emit(this.isDarkMode);
   }
 
   disableDarkMode() {
     document.body.classList.remove("dark-mode");
     localStorage.setItem('theme', 'light');
     this.isDarkMode = false;
+    this.themeChanged.emit(this.isDarkMode);
   }
 
   toggleTheme() {

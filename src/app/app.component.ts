@@ -45,6 +45,7 @@ Chart.register(
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
+<<<<<<< Updated upstream
 export class AppComponent implements AfterViewInit {
   constructor(private router: Router, private http: HttpClient) {}
 
@@ -242,5 +243,12 @@ export class AppComponent implements AfterViewInit {
         }
       });
     });
+=======
+export class AppComponent {
+  public isDarkMode: boolean = false;
+  
+  onThemeChanged(isDark: boolean) {
+    this.isDarkMode = isDark;
+>>>>>>> Stashed changes
   }
 }

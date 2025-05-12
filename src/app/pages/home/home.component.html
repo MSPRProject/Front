@@ -1,0 +1,162 @@
+<main
+  class="pt-10 flex flex-col flex-grow h-full items-center justify-start space-y-4 px-4 bg-white text-gray-800 dark:bg-gray-900 dark:text-white transition-colors duration-300"
+>
+  <div class="flex flex-row justify-between px-5 pb-20 w-full">
+    <button
+      (click)="pruneCache()"
+      class="bg-blue-500 hover:bg-blue-600 dark:bg-gray-800 dark:hover:bg-blue-600 text-white dark:text-gray-300 dark:hover:text-white font-semibold py-2 px-4 border border-blue-500 hover-border-blue-600 dark:border-gray-700 dark:hover:border-blue-600 rounded transition-colors duration-300"
+    >
+      Actualiser les données
+    </button>
+
+    <div class="space-x-8">
+      <select
+        class="bg-white text-black dark:bg-gray-800 dark:text-white border dark:border-gray-600 p-2 rounded"
+        name="exportFormat"
+        id="exportFormat"
+        [(ngModel)]="exportFormat"
+      >
+        <option value="csv" [selected]="exportFormat === 'csv'">CSV</option>
+        <option value="json" [selected]="exportFormat === 'json'">JSON</option>
+      </select>
+      <button
+        (click)="export()"
+        class="bg-blue-500 hover:bg-blue-600 dark:bg-gray-800 dark:hover:bg-blue-600 text-white dark:text-gray-300 dark:hover:text-white font-semibold py-2 px-4 border border-blue-500 hover-border-blue-600 dark:border-gray-700 dark:hover:border-blue-600 rounded transition-colors duration-300"
+      >
+        Exporter les données
+      </button>
+    </div>
+  </div>
+
+  <div class="flex flex-row flex-wrap justify-around w-full">
+    <div class="pb-10">
+      <select
+        class="bg-white text-black dark:bg-gray-800 dark:text-white border dark:border-gray-600 p-2 rounded"
+        name="infectionByContinentPandemic"
+        id="infectionByContinentPandemic"
+        [(ngModel)]="infectionByContinentPandemic"
+        (ngModelChange)="
+          this.infectionByContinentPandemicChart.loadData(undefined)
+        "
+      >
+        <option
+          *ngFor="let pandemic of pandemics"
+          [value]="pandemic.id"
+          [label]="pandemic.name"
+          [selected]="pandemic.id === infectionByContinentPandemic"
+        ></option>
+      </select>
+      <app-chart
+        #infectionByContinentPandemicChart
+        [source]="loadInfectionByContinent.bind(this)"
+        name="Infection by Continent"
+        [sourceParams]="infectionByContinentPandemic"
+        [isDarkMode]="isDarkMode"
+      ></app-chart>
+    </div>
+
+    <div class="pb-10">
+      <label
+        for="top10CountriesByDeathCasesFilter"
+        class="flex flex-row justify-between"
+      >
+        <span class="space-x-2">
+          <input
+            type="checkbox"
+            [(ngModel)]="top10CountriesByDeathCasesFilter"
+            (ngModelChange)="
+              this.top10CountriesByDeathCasesChart.loadData(undefined)
+            "
+            name="top10CountriesByDeathCasesFilter"
+            id="top10CountriesByDeathCasesFilter"
+          />
+          Filtrer par pandémie
+        </span>
+        <select
+          class="bg-white text-black dark:bg-gray-800 dark:text-white border dark:border-gray-600 p-2 rounded"
+          name="top10CountriesByDeathCasesPandemic"
+          id="top10CountriesByDeathCasesPandemic"
+          [(ngModel)]="top10CountriesByDeathCasesPandemic"
+          (ngModelChange)="
+            this.top10CountriesByDeathCasesChart.loadData(undefined)
+          "
+          [disabled]="!top10CountriesByDeathCasesFilter"
+        >
+          <option
+            *ngFor="let pandemic of pandemics"
+            [value]="pandemic.id"
+            [label]="pandemic.name"
+            [selected]="pandemic.id === top10CountriesByDeathCasesPandemic"
+          ></option>
+        </select>
+      </label>
+      <app-chart
+        #top10CountriesByDeathCasesChart
+        [source]="loadTop10CountriesByDeathCases.bind(this)"
+        name="Top 10 Countries by Death and Cases"
+        [sourceParams]="[
+          top10CountriesByDeathCasesFilter,
+          top10CountriesByDeathCasesPandemic,
+        ]"
+        [xAxisLabel]="'Pays'"
+        [yAxisLabel]="'Nombre de cas et décès'"
+        [isDarkMode]="isDarkMode"
+      ></app-chart>
+    </div>
+
+    <div class="pb-10">
+      <label
+        for="newCasesDeathsOverTimePandemic"
+        class="flex flex-row justify-between"
+      >
+        <span class="space-x-2">
+          <select
+            class="bg-white text-black dark:bg-gray-800 dark:text-white border dark:border-gray-600 p-2 rounded"
+            name="newCasesDeathsOverTimePandemic"
+            id="newCasesDeathsOverTimePandemic"
+            [(ngModel)]="newCasesDeathsOverTimePandemic"
+            (ngModelChange)="
+              this.newCasesDeathsOverTimeChart.loadData(undefined)
+            "
+          >
+            <option
+              *ngFor="let pandemic of pandemics"
+              [value]="pandemic.id"
+              [label]="pandemic.name"
+              [selected]="pandemic.id === newCasesDeathsOverTimePandemic"
+            ></option>
+          </select>
+          <select
+            class="bg-white text-black dark:bg-gray-800 dark:text-white border dark:border-gray-600 p-2 rounded"
+            name="newCasesDeathsOverTimeCountry"
+            id="newCasesDeathsOverTimeCountry"
+            [(ngModel)]="newCasesDeathsOverTimeCountry"
+            (ngModelChange)="
+              this.newCasesDeathsOverTimeChart.loadData(undefined)
+            "
+          >
+            <option
+              *ngFor="let country of countries"
+              [value]="country.id"
+              [label]="country.name"
+              [selected]="country.id === newCasesDeathsOverTimeCountry"
+            ></option>
+          </select>
+        </span>
+      </label>
+      <app-chart
+        #newCasesDeathsOverTimeChart
+        [source]="loadNewCasesDeathsOverTime.bind(this)"
+        name="New Cases and Deaths Over Time"
+        [sourceParams]="[
+          newCasesDeathsOverTimePandemic,
+          newCasesDeathsOverTimeCountry,
+        ]"
+        width="1200"
+        [xAxisLabel]="'Temps (jours)'"
+        [yAxisLabel]="'Nombre de cas et décès'"
+        [isDarkMode]="isDarkMode"
+      ></app-chart>
+    </div>
+  </div>
+</main>
