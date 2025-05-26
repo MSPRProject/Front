@@ -6,6 +6,7 @@ import { FormsModule } from "@angular/forms";
 import { Pandemic } from "../../models/pandemic";
 import { Subscription } from "rxjs";
 import { Country } from "../../models/country";
+import { ThemeService } from "../../services/theme.service";
 
 @Component({
   selector: "app-home",
@@ -38,9 +39,15 @@ export class HomeComponent {
   @ViewChild("pandemicComparisonChart")
   pandemicComparisonChart!: ChartComponent;
 
-  constructor(private apiService: ApiService) {}
+  private subscription!: Subscription;
+
+  constructor(private apiService: ApiService, private themeService: ThemeService) {}
 
   ngOnInit() {
+    this.subscription = this.themeService.isDarkMode$.subscribe(
+      (isDark) => (this.isDarkMode = isDark)
+    );
+
     this.subscriptions$.push(
       this.apiService.getAllPandemics().subscribe((pandemics) => {
         this.pandemics = pandemics;
@@ -69,6 +76,9 @@ export class HomeComponent {
   }
 
   ngOnDestroy() {
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
     this.subscriptions$.forEach((subscription) => subscription.unsubscribe());
   }
 

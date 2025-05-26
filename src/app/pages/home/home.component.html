@@ -11,6 +11,7 @@
 
     <div class="space-x-8">
       <select
+        aria-label="Sélectionner le format d'exportation"
         class="bg-white text-black dark:bg-gray-800 dark:text-white border dark:border-gray-600 p-2 rounded"
         name="exportFormat"
         id="exportFormat"
@@ -31,6 +32,7 @@
   <div class="flex flex-row flex-wrap justify-around w-full">
     <div class="pb-10">
       <select
+        aria-label="Sélectionner la pandémie"
         class="bg-white text-black dark:bg-gray-800 dark:text-white border dark:border-gray-600 p-2 rounded"
         name="infectionByContinentPandemic"
         id="infectionByContinentPandemic"
@@ -51,6 +53,7 @@
         [source]="loadInfectionByContinent.bind(this)"
         name="Infection by Continent"
         [sourceParams]="infectionByContinentPandemic"
+        [isDarkMode]="isDarkMode"
       ></app-chart>
     </div>
 
@@ -72,6 +75,7 @@
           Filtrer par pandémie
         </span>
         <select
+          aria-label="Sélectionner la pandémie"
           class="bg-white text-black dark:bg-gray-800 dark:text-white border dark:border-gray-600 p-2 rounded"
           name="top10CountriesByDeathCasesPandemic"
           id="top10CountriesByDeathCasesPandemic"
@@ -110,6 +114,7 @@
       >
         <span class="space-x-2">
           <select
+            aria-label="Sélectionner la pandémie"
             class="bg-white text-black dark:bg-gray-800 dark:text-white border dark:border-gray-600 p-2 rounded"
             name="newCasesDeathsOverTimePandemic"
             id="newCasesDeathsOverTimePandemic"
@@ -126,6 +131,7 @@
             ></option>
           </select>
           <select
+            aria-label="Sélectionner le pays"
             class="bg-white text-black dark:bg-gray-800 dark:text-white border dark:border-gray-600 p-2 rounded"
             name="newCasesDeathsOverTimeCountry"
             id="newCasesDeathsOverTimeCountry"

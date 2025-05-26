@@ -1,5 +1,4 @@
 <div
-
   class="flex items-center justify-between w-full bg-white text-gray-800 dark:bg-gray-900 dark:text-white border-b border-gray-200 dark:border-gray-700 p-4 shadow-md transition-all duration-300 ease-in-out"
 >
   <div class="flex flex-row items-center gap-4 justify-between w-full">
@@ -7,15 +6,18 @@
       *ngIf="!isDarkMode"
       src="/images/logo_sanalyz.png"
       class="w-32 h-auto"
-      alt="Sanalyz Logo Light"
+      alt="Logo Sanalyz Bleu Marine"
     />
     <img
       *ngIf="isDarkMode"
       src="/images/logo_dark_sanalyz.png"
       class="w-32 h-auto"
-      alt="Sanalyz Logo Dark"
+      alt="Logo Sanalyz Blanc"
     />
     <button
+      title="Toggle dark mode"
+      name="toggleDarkMode"
+      aria-label="Toggle dark mode"
       (click)="toggleTheme()"
       class="focus:outline-none text-gray-800 dark:text-white mr-10"
     >

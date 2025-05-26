@@ -4,25 +4,26 @@
 
 :root{
     --darkMode: rgb(22, 22, 22);
+    --lightMode: rgb(236, 240, 241);
 }
 
 body.dark-mode
 {
     background-color: var(--darkMode);
-    color: white;
+    color: var(--lightMode);
     transition: background-color 0.3s ease, color 0.3s ease;
 }
   
 body.dark-mode nav 
 {
     background-color: var(--darkMode);
-    color: white;
+    color: var(--lightMode);
     border-color: #222; /* optionnel pour un effet un peu moins tranché */
 }
   
 body.dark-mode nav a
 {
-    color: white;
+    color: var(--lightMode);
 }
   
 body.dark-mode nav a:hover
