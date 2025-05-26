@@ -111,4 +111,13 @@ export class HomeComponent {
       this.pandemicComparisonChart.loadData(undefined);
     });
   }
+
+  prediction: string | null = null;
+
+  getPrediction() {
+    this.apiService.PostPredict(1000, 50, 2023).subscribe(res => {
+      this.prediction = res.prediction;
+      console.log(this.prediction);
+    });
+  }
 }

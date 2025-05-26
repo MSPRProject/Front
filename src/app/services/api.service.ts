@@ -34,9 +34,14 @@ interface ApiCountryResponse {
 })
 export class ApiService {
   private apiUrl = "http://localhost:8080";
+  private apiUrlPredict = "http://localhost:8081/predict";
 
   constructor(private http: HttpClient) {}
 
+  PostPredict(new_cases: number, new_deaths: number, year: number): Observable<{prediction: string}> {
+    return this.http.post<{prediction: string}>(this.apiUrlPredict, { new_cases, new_deaths, year });
+  }
+  
   getPandemicComparison(): Observable<any> {
     return this.http
       .get<
