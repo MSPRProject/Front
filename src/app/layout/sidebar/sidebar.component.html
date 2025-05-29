@@ -3,12 +3,25 @@
 >
   <ul class="space-y-2">
     <li>
-      <span>Tableau de bord</span>
+      <a
+        [routerLink]="['/']"
+        class="flex items-center gap-2 px-3 py-2 rounded hover:bg-gray-50 dark:hover:bg-gray-800 transition"
+      >
+        <span>Tableau de bord</span>
+      </a>
+    </li>
+    <li>
+      <a
+        [routerLink]="['/predict']"
+        class="flex items-center gap-2 px-3 py-2 rounded hover:bg-gray-50 dark:hover:bg-gray-800 transition"
+      >
+        <span>Prédiction</span>
+      </a>
     </li>
     <li>
       <a
         href="http://localhost:8080/swagger-ui/index.html#/"
-        class="flex items-center gap-2 px-3 py-2 rounded hover:bg-gray-50 transition"
+        class="flex items-center gap-2 px-3 py-2 rounded hover:bg-gray-50 dark:hover:bg-gray-800 transition"
       >
         <i class="fas fa-th-large"></i>
         <svg

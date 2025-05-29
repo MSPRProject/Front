@@ -1,0 +1,38 @@
+<select
+  class="bg-white text-black dark:bg-gray-800 dark:text-white border dark:border-gray-600 p-2 rounded"
+  name="pandemic"
+  id="pandemic"
+  [(ngModel)]="pandemicId"
+>
+  <option
+    *ngFor="let pandemic of pandemics"
+    [value]="pandemic.id"
+    [selected]="pandemicId == pandemic.id"
+  >
+    {{ pandemic.name }}
+  </option>
+</select>
+
+<select
+  class="bg-white text-black dark:bg-gray-800 dark:text-white border dark:border-gray-600 p-2 rounded"
+  name="country"
+  id="country"
+  [(ngModel)]="countryId"
+>
+  <option
+    *ngFor="let country of countries"
+    [value]="country.id"
+    [selected]="countryId == country.id"
+  >
+    {{ country.name }}
+  </option>
+</select>
+
+<date-picker (date)="onDateSelected($event)"></date-picker>
+
+<button (click)="predict()">Prédire</button>
+
+<div *ngIf="prediction">
+  <h3>Prediction Result</h3>
+  <p>{{ prediction | json }}</p>
+</div>
