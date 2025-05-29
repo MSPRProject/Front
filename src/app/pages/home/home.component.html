@@ -38,8 +38,11 @@
         id="infectionByContinentPandemic"
         [(ngModel)]="infectionByContinentPandemic"
         (ngModelChange)="
-          this.infectionByContinentPandemicChart.loadData(undefined)
+          this.infectionByContinentPandemicChart.loadData(
+            this.infectionByContinentPandemic
+          )
         "
+        placeholder="Sélectionner une pandémie"
       >
         <option
           *ngFor="let pandemic of pandemics"
@@ -67,7 +70,10 @@
             type="checkbox"
             [(ngModel)]="top10CountriesByDeathCasesFilter"
             (ngModelChange)="
-              this.top10CountriesByDeathCasesChart.loadData(undefined)
+              this.top10CountriesByDeathCasesChart.loadData([
+                this.top10CountriesByDeathCasesFilter,
+                this.top10CountriesByDeathCasesPandemic,
+              ])
             "
             name="top10CountriesByDeathCasesFilter"
             id="top10CountriesByDeathCasesFilter"
@@ -81,10 +87,16 @@
           id="top10CountriesByDeathCasesPandemic"
           [(ngModel)]="top10CountriesByDeathCasesPandemic"
           (ngModelChange)="
-            this.top10CountriesByDeathCasesChart.loadData(undefined)
+            this.top10CountriesByDeathCasesChart.loadData([
+              this.top10CountriesByDeathCasesFilter,
+              this.top10CountriesByDeathCasesPandemic,
+            ])
           "
           [disabled]="!top10CountriesByDeathCasesFilter"
         >
+          <option [ngValue]="null" hidden disabled>
+            Sélectionnez une pandémie
+          </option>
           <option
             *ngFor="let pandemic of pandemics"
             [value]="pandemic.id"
@@ -120,7 +132,10 @@
             id="newCasesDeathsOverTimePandemic"
             [(ngModel)]="newCasesDeathsOverTimePandemic"
             (ngModelChange)="
-              this.newCasesDeathsOverTimeChart.loadData(undefined)
+              this.newCasesDeathsOverTimeChart.loadData([
+                this.newCasesDeathsOverTimePandemic,
+                this.newCasesDeathsOverTimeCountry,
+              ])
             "
           >
             <option
@@ -137,7 +152,10 @@
             id="newCasesDeathsOverTimeCountry"
             [(ngModel)]="newCasesDeathsOverTimeCountry"
             (ngModelChange)="
-              this.newCasesDeathsOverTimeChart.loadData(undefined)
+              this.newCasesDeathsOverTimeChart.loadData([
+                this.newCasesDeathsOverTimeCountry,
+                this.newCasesDeathsOverTimePandemic,
+              ])
             "
           >
             <option

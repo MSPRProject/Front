@@ -26,7 +26,7 @@ export class HomeComponent {
   @ViewChild("infectionByContinentPandemicChart")
   infectionByContinentPandemicChart!: ChartComponent;
 
-  top10CountriesByDeathCasesPandemic?: number;
+  top10CountriesByDeathCasesPandemic: number | null = null;
   top10CountriesByDeathCasesFilter: boolean = false;
   @ViewChild("top10CountriesByDeathCasesChart")
   top10CountriesByDeathCasesChart!: ChartComponent;
@@ -54,7 +54,7 @@ export class HomeComponent {
         this.infectionByContinentPandemic = this.pandemics[0].id;
         this.infectionByContinentPandemicChart.loadData(this.pandemics[0].id);
 
-        this.newCasesDeathsOverTimeCountry = this.pandemics[0].id;
+        this.newCasesDeathsOverTimePandemic = this.pandemics[0].id;
         this.newCasesDeathsOverTimeChart.loadData([
           this.newCasesDeathsOverTimeCountry,
           this.pandemics[0].id,
@@ -93,7 +93,7 @@ export class HomeComponent {
 
   loadTop10CountriesByDeathCases(params: [boolean, number]) {
     let [filter, id] = params;
-    if (filter) {
+    if (filter && id !== null) {
       return this.apiService.getTop10CountriesByDeathAndCases(id);
     } else {
       return this.apiService.getTop10CountriesByDeathAndCases();
@@ -115,20 +115,13 @@ export class HomeComponent {
   }
 
   pruneCache() {
-    this.apiService.pruneChartCache().subscribe(() => {
-      this.infectionByContinentPandemicChart.loadData(undefined);
-      this.top10CountriesByDeathCasesChart.loadData(undefined);
-      this.newCasesDeathsOverTimeChart.loadData(undefined);
-      this.pandemicComparisonChart.loadData(undefined);
-    });
-  }
-
-  prediction: string | null = null;
-
-  getPrediction() {
-    this.apiService.PostPredict(1000, 50, 2023).subscribe(res => {
-      this.prediction = res.prediction;
-      console.log(this.prediction);
-    });
+    this.subscriptions$.push(
+      this.apiService.pruneChartCache().subscribe(() => {
+        this.infectionByContinentPandemicChart.loadData(undefined);
+        this.top10CountriesByDeathCasesChart.loadData(undefined);
+        this.newCasesDeathsOverTimeChart.loadData(undefined);
+        this.pandemicComparisonChart.loadData(undefined);
+      }),
+    );
   }
 }
