@@ -1,38 +1,49 @@
-<select
-  class="bg-white text-black dark:bg-gray-800 dark:text-white border dark:border-gray-600 p-2 rounded"
-  name="pandemic"
-  id="pandemic"
-  [(ngModel)]="pandemicId"
+<main
+  class="pt-10 flex flex-col flex-grow h-full justify-start space-y-4 px-4 bg-white text-gray-800 dark:bg-gray-900 dark:text-white transition-colors duration-300"
 >
-  <option
-    *ngFor="let pandemic of pandemics"
-    [value]="pandemic.id"
-    [selected]="pandemicId == pandemic.id"
-  >
-    {{ pandemic.name }}
-  </option>
-</select>
+  <div class="pb-10">
+    <div class="flex flex-row items-center space-x-2"> <!-- Ligne horizontale -->
+      <select
+        aria-label="Sélectionner la pandémie"
+        class="bg-white text-black dark:bg-gray-800 dark:text-white border dark:border-gray-600 p-2 rounded"
+        name="pandemic"
+        id="pandemic"
+        [(ngModel)]="pandemicId"
+      >
+        <option
+          *ngFor="let pandemic of pandemics"
+          [value]="pandemic.id"
+          [selected]="pandemicId == pandemic.id"
+        >
+          {{ pandemic.name }}
+        </option>
+      </select>
 
-<select
-  class="bg-white text-black dark:bg-gray-800 dark:text-white border dark:border-gray-600 p-2 rounded"
-  name="country"
-  id="country"
-  [(ngModel)]="countryId"
->
-  <option
-    *ngFor="let country of countries"
-    [value]="country.id"
-    [selected]="countryId == country.id"
-  >
-    {{ country.name }}
-  </option>
-</select>
+      <select
+        aria-label="Sélectionner le pays"
+        class="bg-white text-black dark:bg-gray-800 dark:text-white border dark:border-gray-600 p-2 rounded"
+        name="country"
+        id="country"
+        [(ngModel)]="countryId"
+      >
+        <option
+          *ngFor="let country of countries"
+          [value]="country.id"
+          [selected]="countryId == country.id"
+        >
+          {{ country.name }}
+        </option>
+      </select>
 
-<date-picker (date)="onDateSelected($event)"></date-picker>
+      <date-picker (date)="onDateSelected($event)"></date-picker>
 
-<button (click)="predict()">Prédire</button>
-
-<div *ngIf="prediction">
-  <h3>Prediction Result</h3>
-  <p>{{ prediction | json }}</p>
-</div>
+      <button (click)="predict()" class="bg-blue-500 hover:bg-blue-600 dark:bg-gray-800 dark:hover:bg-blue-600 text-white dark:text-gray-300 dark:hover:text-white font-semibold py-2 px-4 border border-blue-500 hover-border-blue-600 dark:border-gray-700 dark:hover:border-blue-600 rounded transition-colors duration-300">
+        Prédire
+      </button>
+    </div>
+    <div *ngIf="prediction" class="mt-4 p-4 bg-green-100 text-green-900 rounded shadow text-center max-w-lg mx-auto">
+      <h3 class="font-bold mb-2">Résultat de la prédiction IA</h3>
+      <pre class="whitespace-pre-wrap">{{ prediction | json }}</pre>
+    </div>
+  </div>
+</main>

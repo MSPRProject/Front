@@ -48,6 +48,10 @@ export class PredictComponent {
         }
       }),
     );
+
+    if (!this.selectedDate) {
+      this.selectedDate = new Date();
+    }
   }
 
   onDateSelected(date: Date) {
@@ -55,13 +59,37 @@ export class PredictComponent {
   }
 
   predict() {
+    console.log("Predict called");
     if (this.countryId && this.pandemicId && this.selectedDate) {
-      const date = new Date(this.selectedDate);
-      this.apiService
-        .predict(this.countryId, this.pandemicId, date)
-        .subscribe((prediction) => {
-          this.prediction = prediction;
-        });
+      console.log("Predict called 2");
+      // Récupérer les objets sélectionnés
+      const country = this.countries.find((c) => c.id === this.countryId);
+      const pandemic = this.pandemics.find((p) => p.id === this.pandemicId);
+      if (!country || !pandemic) {
+        this.prediction = null;
+        return;
+      }
+      // Construction du body attendu par l'API IA
+      const predictData: any = {
+        pandemic_name: pandemic.name,
+        pandemic_pathogen: pandemic.pathogen || "",
+        country_iso3: country.iso3,
+        continent: country.continent,
+        reports: [], // À remplir si tu veux l'historique, sinon vide
+        target: {
+          date: this.selectedDate.toISOString().split("T")[0],
+        },
+      };
+      // Appel à l'API IA
+      this.apiService.postPredict(predictData).subscribe({
+        next: (result) => {
+          // L'API IA retourne déjà { new_cases, new_deaths }
+          this.prediction = result;
+        },
+        error: (err) => {
+          this.prediction = null;
+        },
+      });
     } else {
       this.prediction = null;
     }

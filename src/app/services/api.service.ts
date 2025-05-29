@@ -236,6 +236,20 @@ export class ApiService {
       });
   }
 
+  /**
+   * Appelle l'API IA (FastAPI) pour obtenir une prédiction.
+   * @param predictData Données au format attendu par l'API IA (voir README IA)
+   */
+  postPredict(predictData: any): Observable<any> {
+    const iaApiUrl = 'http://localhost:8000/predict';
+    const token = localStorage.getItem('ia_bearer_token') || '';
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    });
+    return this.http.post<any>(iaApiUrl, predictData, { headers });
+  }
+
   // Fonction pour gérer les réponses de l'API
   private handleResponse(response: HttpResponse<any>): any {
     console.log(response);

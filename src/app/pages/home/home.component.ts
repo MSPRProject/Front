@@ -8,6 +8,8 @@ import { Subscription } from "rxjs";
 import { Country } from "../../models/country";
 import { ThemeService } from "../../services/theme.service";
 
+const BEARER_TOKEN_IA = 'abcd1234';
+
 @Component({
   selector: "app-home",
   imports: [CommonModule, ChartComponent, FormsModule],
@@ -41,7 +43,11 @@ export class HomeComponent {
 
   private subscription!: Subscription;
 
-  constructor(private apiService: ApiService, private themeService: ThemeService) {}
+  lastIaPrediction: any = null;
+
+  constructor(private apiService: ApiService, private themeService: ThemeService) {
+    localStorage.setItem('ia_bearer_token', BEARER_TOKEN_IA);
+  }
 
   ngOnInit() {
     this.subscription = this.themeService.isDarkMode$.subscribe(
