@@ -43,7 +43,10 @@
     </div>
     <div *ngIf="prediction" class="mt-4 p-4 bg-green-100 text-green-900 rounded shadow text-center max-w-lg mx-auto">
       <h3 class="font-bold mb-2">Résultat de la prédiction IA</h3>
-      <pre class="whitespace-pre-wrap">{{ prediction | json }}</pre>
+      <ul>
+        <li class="mb-2">Nouveaux cas: {{ prediction.new_cases }}</li>
+        <li class="mb-2">Nouveaux décès: {{ prediction.new_deaths }}</li>
+      </ul>
     </div>
   </div>
 </main>
