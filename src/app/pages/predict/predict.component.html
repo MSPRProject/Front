@@ -1,11 +1,18 @@
 <main
   class="pt-10 flex flex-col flex-grow h-full justify-start space-y-4 px-4 bg-white text-gray-800 dark:bg-gray-900 dark:text-white transition-colors duration-300"
 >
-  <div class="pb-10">
-    <div class="flex flex-row items-center space-x-2"> <!-- Ligne horizontale -->
+  <span class="text-gray-400 mb-4">
+    Une fois le rapport généré, il sera ajouté à la liste des rapports. Vous
+    devrez actualiser les données sur la page principale pour mettre à jour les
+    graphiques.
+  </span>
+
+  <div class="flex flex-row">
+    <div class="flex flex-col items-left justify-between w-min">
+      <!-- Ligne horizontale -->
       <select
         aria-label="Sélectionner la pandémie"
-        class="bg-white text-black dark:bg-gray-800 dark:text-white border dark:border-gray-600 p-2 rounded"
+        class="bg-white text-black dark:bg-gray-800 dark:text-white border dark:border-gray-600 p-2 mb-2 rounded"
         name="pandemic"
         id="pandemic"
         [(ngModel)]="pandemicId"
@@ -21,7 +28,7 @@
 
       <select
         aria-label="Sélectionner le pays"
-        class="bg-white text-black dark:bg-gray-800 dark:text-white border dark:border-gray-600 p-2 rounded"
+        class="bg-white text-black dark:bg-gray-800 dark:text-white border dark:border-gray-600 p-2 mb-2 rounded"
         name="country"
         id="country"
         [(ngModel)]="countryId"
@@ -37,11 +44,17 @@
 
       <date-picker (date)="onDateSelected($event)"></date-picker>
 
-      <button (click)="predict()" class="bg-blue-500 hover:bg-blue-600 dark:bg-gray-800 dark:hover:bg-blue-600 text-white dark:text-gray-300 dark:hover:text-white font-semibold py-2 px-4 border border-blue-500 hover-border-blue-600 dark:border-gray-700 dark:hover:border-blue-600 rounded transition-colors duration-300">
+      <button
+        (click)="predict()"
+        class="bg-blue-500 hover:bg-blue-600 dark:bg-gray-800 dark:hover:bg-blue-600 text-white dark:text-gray-300 dark:hover:text-white font-semibold mt-16 py-2 px-4 border border-blue-500 hover-border-blue-600 dark:border-gray-700 dark:hover:border-blue-600 rounded transition-colors duration-300"
+      >
         Prédire
       </button>
     </div>
-    <div *ngIf="prediction" class="mt-4 p-4 bg-green-100 text-green-900 rounded shadow text-center max-w-lg mx-auto">
+    <div
+      *ngIf="prediction"
+      class="p-4 bg-green-100 text-green-900 rounded shadow text-center w-full mx-8 h-min"
+    >
       <h3 class="font-bold mb-2">Résultat de la prédiction IA</h3>
       <ul>
         <li class="mb-2">Nouveaux cas: {{ prediction.new_cases }}</li>

@@ -56,19 +56,42 @@ export class DatePicker {
       this.year,
       this.month,
       today.getDate(),
-    ).toDateString();
+    ).toLocaleDateString("fr-FR", {
+      weekday: "short",
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+    });
     this.getNoOfDays();
   }
 
   isToday(day: number) {
     const today = new Date();
     const d = new Date(this.year, this.month, day);
-    return today.toDateString() === d.toDateString() ? true : false;
+    return today.toLocaleDateString("fr-FR", {
+      weekday: "short",
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+    }) ===
+      d.toLocaleDateString("fr-FR", {
+        weekday: "short",
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+      })
+      ? true
+      : false;
   }
 
   getDateValue(day: number) {
     let selectedDate = new Date(this.year, this.month, day);
-    this.datepickerValue = selectedDate.toDateString();
+    this.datepickerValue = selectedDate.toLocaleDateString("fr-FR", {
+      weekday: "short",
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+    });
     this.date.emit(selectedDate);
     this.showDatepicker = false;
   }

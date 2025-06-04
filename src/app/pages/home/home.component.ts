@@ -8,8 +8,6 @@ import { Subscription } from "rxjs";
 import { Country } from "../../models/country";
 import { ThemeService } from "../../services/theme.service";
 
-const BEARER_TOKEN_IA = 'abcd1234';
-
 @Component({
   selector: "app-home",
   imports: [CommonModule, ChartComponent, FormsModule],
@@ -45,38 +43,55 @@ export class HomeComponent {
 
   lastIaPrediction: any = null;
 
-  constructor(private apiService: ApiService, private themeService: ThemeService) {
-    localStorage.setItem('ia_bearer_token', BEARER_TOKEN_IA);
-  }
+  constructor(
+    private apiService: ApiService,
+    private themeService: ThemeService,
+  ) {}
 
   ngOnInit() {
     this.subscription = this.themeService.isDarkMode$.subscribe(
-      (isDark) => (this.isDarkMode = isDark)
+      (isDark) => (this.isDarkMode = isDark),
     );
 
     this.subscriptions$.push(
-      this.apiService.getAllPandemics().subscribe((pandemics) => {
-        this.pandemics = pandemics;
-        this.infectionByContinentPandemic = this.pandemics[0].id;
-        this.infectionByContinentPandemicChart.loadData(this.pandemics[0].id);
+      this.apiService.getAllPandemics().subscribe({
+        next: (pandemics) => {
+          this.pandemics = pandemics;
+          this.infectionByContinentPandemic = this.pandemics[0].id;
+          this.infectionByContinentPandemicChart.loadData(this.pandemics[0].id);
 
-        this.newCasesDeathsOverTimePandemic = this.pandemics[0].id;
-        this.newCasesDeathsOverTimeChart.loadData([
-          this.newCasesDeathsOverTimeCountry,
-          this.pandemics[0].id,
-        ]);
+          this.newCasesDeathsOverTimePandemic = this.pandemics[0].id;
+          this.newCasesDeathsOverTimeChart.loadData([
+            this.newCasesDeathsOverTimeCountry,
+            this.pandemics[0].id,
+          ]);
+        },
+        error: (err) => {
+          console.error("Erreur lors de la récupération des pandémies :", err);
+          alert(
+            "Une erreur est survenue lors de la récupération des pandémies. Merci de contacter le support.",
+          );
+        },
       }),
     );
 
     this.subscriptions$.push(
-      this.apiService.getAllCountries().subscribe((countries) => {
-        this.countries = countries;
+      this.apiService.getAllCountries().subscribe({
+        next: (countries) => {
+          this.countries = countries;
 
-        this.newCasesDeathsOverTimeCountry = this.countries[0].id;
-        this.newCasesDeathsOverTimeChart.loadData([
-          this.countries[0].id,
-          this.newCasesDeathsOverTimeCountry,
-        ]);
+          this.newCasesDeathsOverTimeCountry = this.countries[0].id;
+          this.newCasesDeathsOverTimeChart.loadData([
+            this.countries[0].id,
+            this.newCasesDeathsOverTimeCountry,
+          ]);
+        },
+        error: (err) => {
+          console.error("Erreur lors de la récupération des pays :", err);
+          alert(
+            "Une erreur est survenue lors de la récupération des pays. Merci de contacter le support.",
+          );
+        },
       }),
     );
   }
@@ -85,7 +100,6 @@ export class HomeComponent {
     if (this.subscription) {
       this.subscription.unsubscribe();
     }
-    this.subscriptions$.forEach((subscription) => subscription.unsubscribe());
   }
 
   loadInfectionByContinent(id: number) {
