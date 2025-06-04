@@ -6,6 +6,7 @@ import { FormsModule } from "@angular/forms";
 import { Pandemic } from "../../models/pandemic";
 import { Subscription } from "rxjs";
 import { Country } from "../../models/country";
+import { ThemeService } from "../../services/theme.service";
 
 @Component({
   selector: "app-home",
@@ -14,6 +15,7 @@ import { Country } from "../../models/country";
   styleUrls: ["./home.component.css"],
 })
 export class HomeComponent {
+  isDarkMode: boolean = false;
   title = "Sanalyz";
   pandemics: Pandemic[] = [];
   countries: Country[] = [];
@@ -24,7 +26,7 @@ export class HomeComponent {
   @ViewChild("infectionByContinentPandemicChart")
   infectionByContinentPandemicChart!: ChartComponent;
 
-  top10CountriesByDeathCasesPandemic?: number;
+  top10CountriesByDeathCasesPandemic: number | null = null;
   top10CountriesByDeathCasesFilter: boolean = false;
   @ViewChild("top10CountriesByDeathCasesChart")
   top10CountriesByDeathCasesChart!: ChartComponent;
@@ -37,38 +39,67 @@ export class HomeComponent {
   @ViewChild("pandemicComparisonChart")
   pandemicComparisonChart!: ChartComponent;
 
-  constructor(private apiService: ApiService) {}
+  private subscription!: Subscription;
+
+  lastIaPrediction: any = null;
+
+  constructor(
+    private apiService: ApiService,
+    private themeService: ThemeService,
+  ) {}
 
   ngOnInit() {
-    this.subscriptions$.push(
-      this.apiService.getAllPandemics().subscribe((pandemics) => {
-        this.pandemics = pandemics;
-        this.infectionByContinentPandemic = this.pandemics[0].id;
-        this.infectionByContinentPandemicChart.loadData(this.pandemics[0].id);
+    this.subscription = this.themeService.isDarkMode$.subscribe(
+      (isDark) => (this.isDarkMode = isDark),
+    );
 
-        this.newCasesDeathsOverTimeCountry = this.pandemics[0].id;
-        this.newCasesDeathsOverTimeChart.loadData([
-          this.newCasesDeathsOverTimeCountry,
-          this.pandemics[0].id,
-        ]);
+    this.subscriptions$.push(
+      this.apiService.getAllPandemics().subscribe({
+        next: (pandemics) => {
+          this.pandemics = pandemics;
+          this.infectionByContinentPandemic = this.pandemics[0].id;
+          this.infectionByContinentPandemicChart.loadData(this.pandemics[0].id);
+
+          this.newCasesDeathsOverTimePandemic = this.pandemics[0].id;
+          this.newCasesDeathsOverTimeChart.loadData([
+            this.newCasesDeathsOverTimeCountry,
+            this.pandemics[0].id,
+          ]);
+        },
+        error: (err) => {
+          console.error("Erreur lors de la récupération des pandémies :", err);
+          alert(
+            "Une erreur est survenue lors de la récupération des pandémies. Merci de contacter le support.",
+          );
+        },
       }),
     );
 
     this.subscriptions$.push(
-      this.apiService.getAllCountries().subscribe((countries) => {
-        this.countries = countries;
+      this.apiService.getAllCountries().subscribe({
+        next: (countries) => {
+          this.countries = countries;
 
-        this.newCasesDeathsOverTimeCountry = this.countries[0].id;
-        this.newCasesDeathsOverTimeChart.loadData([
-          this.countries[0].id,
-          this.newCasesDeathsOverTimeCountry,
-        ]);
+          this.newCasesDeathsOverTimeCountry = this.countries[0].id;
+          this.newCasesDeathsOverTimeChart.loadData([
+            this.countries[0].id,
+            this.newCasesDeathsOverTimeCountry,
+          ]);
+        },
+        error: (err) => {
+          console.error("Erreur lors de la récupération des pays :", err);
+          alert(
+            "Une erreur est survenue lors de la récupération des pays. Merci de contacter le support.",
+          );
+        },
       }),
     );
   }
 
   ngOnDestroy() {
-    this.subscriptions$.forEach((subscription) => subscription.unsubscribe());
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
   }
 
   loadInfectionByContinent(id: number) {
@@ -82,7 +113,7 @@ export class HomeComponent {
 
   loadTop10CountriesByDeathCases(params: [boolean, number]) {
     let [filter, id] = params;
-    if (filter) {
+    if (filter && id !== null) {
       return this.apiService.getTop10CountriesByDeathAndCases(id);
     } else {
       return this.apiService.getTop10CountriesByDeathAndCases();
@@ -104,20 +135,13 @@ export class HomeComponent {
   }
 
   pruneCache() {
-    this.apiService.pruneChartCache().subscribe(() => {
-      this.infectionByContinentPandemicChart.loadData(undefined);
-      this.top10CountriesByDeathCasesChart.loadData(undefined);
-      this.newCasesDeathsOverTimeChart.loadData(undefined);
-      this.pandemicComparisonChart.loadData(undefined);
-    });
-  }
-
-  prediction: string | null = null;
-
-  getPrediction() {
-    this.apiService.PostPredict(1000, 50, 2023).subscribe(res => {
-      this.prediction = res.prediction;
-      console.log(this.prediction);
-    });
+    this.subscriptions$.push(
+      this.apiService.pruneChartCache().subscribe(() => {
+        this.infectionByContinentPandemicChart.loadData(undefined);
+        this.top10CountriesByDeathCasesChart.loadData(undefined);
+        this.newCasesDeathsOverTimeChart.loadData(undefined);
+        this.pandemicComparisonChart.loadData(undefined);
+      }),
+    );
   }
 }

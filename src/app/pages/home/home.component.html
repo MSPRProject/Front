@@ -11,6 +11,7 @@
 
     <div class="space-x-8">
       <select
+        aria-label="Sélectionner le format d'exportation"
         class="bg-white text-black dark:bg-gray-800 dark:text-white border dark:border-gray-600 p-2 rounded"
         name="exportFormat"
         id="exportFormat"
@@ -31,13 +32,17 @@
   <div class="flex flex-row flex-wrap justify-around w-full">
     <div class="pb-10">
       <select
+        aria-label="Sélectionner la pandémie"
         class="bg-white text-black dark:bg-gray-800 dark:text-white border dark:border-gray-600 p-2 rounded"
         name="infectionByContinentPandemic"
         id="infectionByContinentPandemic"
         [(ngModel)]="infectionByContinentPandemic"
         (ngModelChange)="
-          this.infectionByContinentPandemicChart.loadData(undefined)
+          this.infectionByContinentPandemicChart.loadData(
+            this.infectionByContinentPandemic
+          )
         "
+        placeholder="Sélectionner une pandémie"
       >
         <option
           *ngFor="let pandemic of pandemics"
@@ -51,6 +56,7 @@
         [source]="loadInfectionByContinent.bind(this)"
         name="Infection by Continent"
         [sourceParams]="infectionByContinentPandemic"
+        [isDarkMode]="isDarkMode"
       ></app-chart>
     </div>
 
@@ -64,7 +70,10 @@
             type="checkbox"
             [(ngModel)]="top10CountriesByDeathCasesFilter"
             (ngModelChange)="
-              this.top10CountriesByDeathCasesChart.loadData(undefined)
+              this.top10CountriesByDeathCasesChart.loadData([
+                this.top10CountriesByDeathCasesFilter,
+                this.top10CountriesByDeathCasesPandemic,
+              ])
             "
             name="top10CountriesByDeathCasesFilter"
             id="top10CountriesByDeathCasesFilter"
@@ -72,15 +81,22 @@
           Filtrer par pandémie
         </span>
         <select
+          aria-label="Sélectionner la pandémie"
           class="bg-white text-black dark:bg-gray-800 dark:text-white border dark:border-gray-600 p-2 rounded"
           name="top10CountriesByDeathCasesPandemic"
           id="top10CountriesByDeathCasesPandemic"
           [(ngModel)]="top10CountriesByDeathCasesPandemic"
           (ngModelChange)="
-            this.top10CountriesByDeathCasesChart.loadData(undefined)
+            this.top10CountriesByDeathCasesChart.loadData([
+              this.top10CountriesByDeathCasesFilter,
+              this.top10CountriesByDeathCasesPandemic,
+            ])
           "
           [disabled]="!top10CountriesByDeathCasesFilter"
         >
+          <option [ngValue]="null" hidden disabled>
+            Sélectionnez une pandémie
+          </option>
           <option
             *ngFor="let pandemic of pandemics"
             [value]="pandemic.id"
@@ -97,6 +113,9 @@
           top10CountriesByDeathCasesFilter,
           top10CountriesByDeathCasesPandemic,
         ]"
+        [xAxisLabel]="'Pays'"
+        [yAxisLabel]="'Nombre de cas et décès'"
+        [isDarkMode]="isDarkMode"
       ></app-chart>
     </div>
 
@@ -107,12 +126,16 @@
       >
         <span class="space-x-2">
           <select
+            aria-label="Sélectionner la pandémie"
             class="bg-white text-black dark:bg-gray-800 dark:text-white border dark:border-gray-600 p-2 rounded"
             name="newCasesDeathsOverTimePandemic"
             id="newCasesDeathsOverTimePandemic"
             [(ngModel)]="newCasesDeathsOverTimePandemic"
             (ngModelChange)="
-              this.newCasesDeathsOverTimeChart.loadData(undefined)
+              this.newCasesDeathsOverTimeChart.loadData([
+                this.newCasesDeathsOverTimePandemic,
+                this.newCasesDeathsOverTimeCountry,
+              ])
             "
           >
             <option
@@ -123,12 +146,16 @@
             ></option>
           </select>
           <select
+            aria-label="Sélectionner le pays"
             class="bg-white text-black dark:bg-gray-800 dark:text-white border dark:border-gray-600 p-2 rounded"
             name="newCasesDeathsOverTimeCountry"
             id="newCasesDeathsOverTimeCountry"
             [(ngModel)]="newCasesDeathsOverTimeCountry"
             (ngModelChange)="
-              this.newCasesDeathsOverTimeChart.loadData(undefined)
+              this.newCasesDeathsOverTimeChart.loadData([
+                this.newCasesDeathsOverTimeCountry,
+                this.newCasesDeathsOverTimePandemic,
+              ])
             "
           >
             <option
@@ -149,6 +176,9 @@
           newCasesDeathsOverTimeCountry,
         ]"
         width="1200"
+        [xAxisLabel]="'Temps (jours)'"
+        [yAxisLabel]="'Nombre de cas et décès'"
+        [isDarkMode]="isDarkMode"
       ></app-chart>
     </div>
   </div>

@@ -2,25 +2,35 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --darkMode: rgb(22, 22, 22);
+:root{
+    --darkMode: rgb(22, 22, 22);
+    --lightMode: rgb(236, 240, 241);
 }
 
-body {
-  transition:
-    background-color 0.3s ease,
-    color 0.3s ease;
+body.dark-mode
+{
+    background-color: var(--darkMode);
+    color: var(--lightMode);
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+  
+body.dark-mode nav 
+{
+    background-color: var(--darkMode);
+    color: var(--lightMode);
+    border-color: #222; /* optionnel pour un effet un peu moins tranché */
+}
+  
+body.dark-mode nav a
+{
+    color: var(--lightMode);
+}
+  
+body.dark-mode nav a:hover
+{
+    background-color: #111; /* un petit gris très foncé pour hover */
 }
 
-html,
-body {
-  margin: 0;
-  padding: 0;
-  width: 100vw;
-  min-height: 100%;
-  height: auto;
-  box-sizing: border-box;
-  display: flex;
-  flex-direction: column;
-  overflow-x: clip;
+select:hover, date-picker:hover, date-picker:focus {
+    cursor: pointer;
 }

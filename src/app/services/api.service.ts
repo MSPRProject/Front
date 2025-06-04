@@ -1,12 +1,29 @@
 import { Injectable } from "@angular/core";
 import { HttpClient, HttpHeaders, HttpResponse } from "@angular/common/http";
-import { Observable, of } from "rxjs";
-import { map, catchError } from "rxjs/operators";
+import { EMPTY, Observable, of } from "rxjs";
+import { map, catchError, expand, reduce } from "rxjs/operators";
 import { Pandemic } from "../models/pandemic";
 import { Country } from "../models/country";
+import { Report } from "../models/report";
 
 interface ApiGenericResponseList {
   _embedded: { [key: string]: any };
+}
+
+interface ApiPaginatedResponse {
+  _embedded: { [key: string]: any };
+  page: {
+    size: number;
+    totalElements: number;
+    totalPages: number;
+    number: number;
+  };
+  _links: {
+    first?: { href: string };
+    last?: { href: string };
+    next?: { href: string };
+    prev?: { href: string };
+  };
 }
 
 interface ApiPandemicResponse {
@@ -34,14 +51,23 @@ interface ApiCountryResponse {
 })
 export class ApiService {
   private apiUrl = "http://localhost:8080";
-  private apiUrlPredict = "http://localhost:8081/predict";
 
   constructor(private http: HttpClient) {}
 
-  PostPredict(new_cases: number, new_deaths: number, year: number): Observable<{prediction: string}> {
-    return this.http.post<{prediction: string}>(this.apiUrlPredict, { new_cases, new_deaths, year });
+  predict(
+    countryId: number,
+    pandemicId: number,
+    date: Date,
+  ): Observable<Report> {
+    return this.http.get<Report>(`${this.apiUrl}/api/ai/predict`, {
+      params: {
+        country_id: countryId,
+        pandemic_id: pandemicId,
+        predict_at: date.toISOString().split("T")[0],
+      },
+    });
   }
-  
+
   getPandemicComparison(): Observable<any> {
     return this.http
       .get<
@@ -130,45 +156,55 @@ export class ApiService {
   }
 
   getAllPandemics(): Observable<Pandemic[]> {
-    return this.http
-      .get<ApiGenericResponseList>(`${this.apiUrl}/pandemics`)
-      .pipe(
-        map((data) =>
-          data._embedded["pandemics"].map(
-            (pandemic: ApiPandemicResponse) =>
-              ({
-                id: pandemic.id,
-                name: pandemic.name,
-                pathogen: pandemic.pathogen,
-                startDate: pandemic.start_date,
-                endDate: pandemic.end_date,
-                description: pandemic.description,
-                notes: pandemic.notes,
-                link: pandemic._links.self.href,
-              }) as Pandemic,
-          ),
+    return this.fetchPaginatedData(`${this.apiUrl}/pandemics`).pipe(
+      map((data: ApiPandemicResponse[]) =>
+        data.map(
+          (pandemic) =>
+            ({
+              id: pandemic.id,
+              name: pandemic.name,
+              pathogen: pandemic.pathogen,
+              startDate: pandemic.start_date,
+              endDate: pandemic.end_date,
+              description: pandemic.description,
+              notes: pandemic.notes,
+              link: pandemic._links.self.href,
+            }) as Pandemic,
         ),
-      );
+      ),
+    );
   }
 
   getAllCountries(): Observable<Country[]> {
-    return this.http
-      .get<ApiGenericResponseList>(`${this.apiUrl}/countries`)
-      .pipe(
-        map((data) =>
-          data._embedded["countries"].map(
-            (country: ApiCountryResponse) =>
-              ({
-                id: country.id,
-                link: country._links.self.href,
-                continent: country.continent,
-                name: country.name,
-                iso3: country.iso3,
-                population: country.population,
-              }) as Country,
-          ),
+    return this.fetchPaginatedData(`${this.apiUrl}/countries`).pipe(
+      map((data: ApiCountryResponse[]) =>
+        data.map(
+          (country) =>
+            ({
+              id: country.id,
+              link: country._links.self.href,
+              continent: country.continent,
+              name: country.name,
+              iso3: country.iso3,
+              population: country.population,
+            }) as Country,
         ),
-      );
+      ),
+    );
+  }
+
+  private fetchPaginatedData(url: string): Observable<any[]> {
+    return this.http.get<ApiPaginatedResponse>(url).pipe(
+      expand((response) => {
+        if (response._links.next) {
+          return this.http.get<ApiPaginatedResponse>(response._links.next.href);
+        } else {
+          return EMPTY;
+        }
+      }),
+      map((response) => response._embedded[Object.keys(response._embedded)[0]]),
+      reduce((acc: any[], data: any[], _) => [...acc, ...data], []),
+    );
   }
 
   downloadData(format: "json" | "csv"): void {
@@ -182,8 +218,8 @@ export class ApiService {
         headers,
         responseType: "blob",
       })
-      .subscribe(
-        (response: Blob) => {
+      .subscribe({
+        next: (response: Blob) => {
           const blob = new Blob([response], {
             type: format === "csv" ? "text/csv" : "application/json",
           });
@@ -194,10 +230,24 @@ export class ApiService {
           a.click();
           window.URL.revokeObjectURL(url);
         },
-        (error) => {
+        error: (error) => {
           console.error("Error downloading file:", error);
         },
-      );
+      });
+  }
+
+  /**
+   * Appelle l'API IA (FastAPI) pour obtenir une prédiction.
+   * @param predictData Données au format attendu par l'API IA (voir README IA)
+   */
+  postPredict(predictData: any): Observable<any> {
+    const iaApiUrl = 'http://localhost:8000/predict';
+    const token = localStorage.getItem('ia_bearer_token') || '';
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    });
+    return this.http.post<any>(iaApiUrl, predictData, { headers });
   }
 
   // Fonction pour gérer les réponses de l'API
