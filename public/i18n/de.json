@@ -1,0 +1,70 @@
+{
+  "app": {
+    "sidebar": {
+      "dashboard": "Armaturenbrett",
+      "predict": "Vorhersagen",
+      "api-doc": "API-Dokumentation"
+    },
+    "month": {
+      "jan": "Januar",
+      "feb": "Februar",
+      "mar": "März",
+      "apr": "April",
+      "may": "Mai",
+      "jun": "Juni",
+      "jul": "Juli",
+      "aug": "August",
+      "sep": "September",
+      "oct": "Oktober",
+      "nov": "November",
+      "dec": "Dezember"
+    },
+    "day": {
+      "mon": "Montag",
+      "tue": "Dienstag",
+      "wed": "Mittwoch",
+      "thu": "Donnerstag",
+      "fri": "Freitag",
+      "sat": "Samstag",
+      "sun": "Sonntag"
+    },
+    "input": {
+      "pandemic-select": "Pandemie auswählen",
+      "country-select": "Land auswählen",
+      "select-export-format": "Exportformat auswählen"
+    },
+    "predict": {
+      "note": "Sobald der Bericht generiert wurde, wird er der Liste der Berichte hinzugefügt. Sie müssen die Daten auf der Hauptseite aktualisieren, um die Diagramme zu aktualisieren.",
+      "button": "Bericht generieren",
+      "result": {
+        "title": "KI-Vorhersageergebnis",
+        "cases": "Neue Fälle: {{cases}}",
+        "deaths": "Neue Todesfälle: {{deaths}}"
+      }
+    },
+    "dashboard": {
+      "refresh": "Diagramme aktualisieren",
+      "export": "Daten exportieren",
+      "filter-by-pandemic": "Nach Pandemie filtern",
+      "charts": {
+        "infection-by-continent": {
+          "name": "Infektionen nach Kontinent"
+        },
+        "top-10-countries-by-deaths-cases": {
+          "name": "Top 10 Länder nach Todesfällen und Fällen",
+          "inputs": {
+            "country": "Länder",
+            "death-cases": "Todesfälle und Fälle"
+          }
+        },
+        "new-cases-deaths-over-time": {
+          "name": "Neue Fälle und Todesfälle im Zeitverlauf",
+          "inputs": {
+            "date": "Datum",
+            "cases-deaths": "Todesfälle und Fälle"
+          }
+        }
+      }
+    }
+  }
+}
