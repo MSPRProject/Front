@@ -1,23 +1,26 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
-import { DatePickerComponent } from './date-picker.component';
+import { DatePicker } from './date-picker.component';
 
 describe('DatePickerComponent', () => {
-  let component: DatePickerComponent;
-  let fixture: ComponentFixture<DatePickerComponent>;
+  let component: DatePicker;
+  let fixture: ComponentFixture<DatePicker>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [DatePickerComponent]
-    })
-    .compileComponents();
+      imports: [DatePicker], 
+    }).compileComponents();
 
-    fixture = TestBed.createComponent(DatePickerComponent);
+    fixture = TestBed.createComponent(DatePicker);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should render an input[type="date"] element', () => {
+    const datePickerElement: HTMLInputElement = fixture.nativeElement.querySelector('input[type="date"]');
+    expect(datePickerElement).toBeTruthy();
   });
 });
