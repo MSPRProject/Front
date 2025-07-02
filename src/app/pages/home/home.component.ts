@@ -7,10 +7,11 @@ import { Pandemic } from "../../models/pandemic";
 import { Subscription } from "rxjs";
 import { Country } from "../../models/country";
 import { ThemeService } from "../../services/theme.service";
+import { TranslateModule, TranslateService } from "@ngx-translate/core";
 
 @Component({
   selector: "app-home",
-  imports: [CommonModule, ChartComponent, FormsModule],
+  imports: [CommonModule, ChartComponent, FormsModule, TranslateModule],
   templateUrl: "./home.component.html",
   styleUrls: ["./home.component.css"],
 })
@@ -46,7 +47,12 @@ export class HomeComponent {
   constructor(
     private apiService: ApiService,
     private themeService: ThemeService,
-  ) {}
+    public translate: TranslateService,
+  ) {
+    this.translate.addLangs(["en", "fr", "de", "it"]);
+    this.translate.setDefaultLang("en");
+    this.translate.use("en");
+  }
 
   ngOnInit() {
     this.subscription = this.themeService.isDarkMode$.subscribe(

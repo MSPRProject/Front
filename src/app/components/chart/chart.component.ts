@@ -1,8 +1,8 @@
 import { Component, OnInit, OnDestroy, Input } from "@angular/core";
-import { Chart, ChartType, registerables } from "chart.js";
+import { Chart, ChartTypeRegistry, registerables } from "chart.js";
 import { CommonModule } from "@angular/common";
 import { Observable, Subscription } from "rxjs";
-import { ThemeService } from "../../services/theme.service";
+import { TranslateService } from "@ngx-translate/core";
 
 Chart.register(...registerables);
 
@@ -13,6 +13,9 @@ Chart.register(...registerables);
   styleUrls: ["./chart.component.css"],
 })
 export class ChartComponent implements OnInit, OnDestroy {
+  private currentType?: keyof ChartTypeRegistry;
+  private currentLabels?: string[];
+  private currentDatasets?: any[];
   private chart?: Chart;
   public status: string = "loading";
 
@@ -25,8 +28,17 @@ export class ChartComponent implements OnInit, OnDestroy {
   @Input() public isDarkMode: boolean = false;
   private subscriptions$: Subscription[] = [];
 
-  constructor() {}
-/*
+  constructor(private translate: TranslateService) {
+    this.translate.addLangs(["en", "fr"]);
+    this.translate.setDefaultLang("en");
+    this.translate.use("en");
+    this.translate.onLangChange.subscribe((lang) => {
+      if (this.chart) {
+        this.createChart();
+      }
+    });
+  }
+  /*
   constructor(private themeService: ThemeService) {
     this.subscriptions$.push(
       this.themeService.isDarkMode$.subscribe((isDark) => {
@@ -91,7 +103,11 @@ export class ChartComponent implements OnInit, OnDestroy {
               console.log(response.data.data);
 
               this.status = "loaded";
-              this.createChart(type, labels, datasets);
+              this.currentType = type;
+              this.currentLabels = labels;
+              this.currentDatasets = datasets;
+
+              this.createChart();
             } else if (response.status == "loading") {
               setTimeout(
                 () =>
@@ -111,7 +127,7 @@ export class ChartComponent implements OnInit, OnDestroy {
     }
   }
 
-  createChart(type: ChartType, labels: string[], datasets: any[]) {
+  createChart() {
     const canvas = document.getElementById(this.name) as HTMLCanvasElement;
 
     if (this.chart) {
@@ -119,23 +135,25 @@ export class ChartComponent implements OnInit, OnDestroy {
     }
 
     // Utilisez isDarkMode pour ajuster les couleurs du graphique
-    const textColor = this.isDarkMode ? 'rgb(236, 240, 241)' : '#333';
-    const gridColor = this.isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)';
+    const textColor = this.isDarkMode ? "rgb(236, 240, 241)" : "#333";
+    const gridColor = this.isDarkMode
+      ? "rgba(255, 255, 255, 0.1)"
+      : "rgba(0, 0, 0, 0.1)";
 
-    console.log(labels, datasets);
+    console.log(this.currentLabels, this.currentDatasets);
 
     this.chart = new Chart(canvas, {
-      type: type,
+      type: this.currentType!,
       data: {
-        labels: labels,
-        datasets: datasets,
+        labels: this.currentLabels,
+        datasets: this.currentDatasets!,
       },
       options: {
         responsive: true,
         plugins: {
           title: {
             display: true,
-            text: this.name,
+            text: this.translate.instant(this.name),
             color: textColor,
           },
           legend: {
@@ -149,28 +167,32 @@ export class ChartComponent implements OnInit, OnDestroy {
             beginAtZero: true,
             title: {
               display: true,
-              text: this.yAxisLabel,
+              text: this.yAxisLabel
+                ? this.translate.instant(this.yAxisLabel)
+                : "",
               color: textColor,
             },
             grid: {
-              color: gridColor
+              color: gridColor,
             },
             ticks: {
-              color: textColor
-            }
+              color: textColor,
+            },
           },
           x: {
             title: {
               display: true,
-              text: this.xAxisLabel,
+              text: this.xAxisLabel
+                ? this.translate.instant(this.xAxisLabel)
+                : "",
               color: textColor,
             },
             grid: {
-              color: gridColor
+              color: gridColor,
             },
             ticks: {
-              color: textColor
-            }
+              color: textColor,
+            },
           },
         },
       },

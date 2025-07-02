@@ -6,10 +6,11 @@ import { Pandemic } from "../../models/pandemic";
 import { Country } from "../../models/country";
 import { Subscription } from "rxjs";
 import { DatePicker } from "../../components/date-picker/date-picker.component";
+import { TranslateModule, TranslateService } from "@ngx-translate/core";
 
 @Component({
   selector: "app-predict",
-  imports: [FormsModule, CommonModule, DatePicker],
+  imports: [FormsModule, CommonModule, DatePicker, TranslateModule],
   templateUrl: "./predict.component.html",
   styleUrl: "./predict.component.css",
 })
@@ -26,8 +27,14 @@ export class PredictComponent {
   prediction: { new_cases: number; new_deaths: number } | null = null;
   $subscriptions: Subscription[] = [];
 
-  constructor(apiService: ApiService) {
+  constructor(
+    apiService: ApiService,
+    private translate: TranslateService,
+  ) {
     this.apiService = apiService;
+    this.translate.addLangs(["en", "fr", "de", "it"]);
+    this.translate.setDefaultLang("en");
+    this.translate.use("en");
   }
 
   ngOnInit() {
