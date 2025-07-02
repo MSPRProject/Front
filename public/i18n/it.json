@@ -1,0 +1,70 @@
+{
+  "app": {
+    "sidebar": {
+      "dashboard": "Dashboard",
+      "predict": "Prevedi",
+      "api-doc": "Documentazione API"
+    },
+    "month": {
+      "jan": "Gennaio",
+      "feb": "Febbraio",
+      "mar": "Marzo",
+      "apr": "Aprile",
+      "may": "Maggio",
+      "jun": "Giugno",
+      "jul": "Luglio",
+      "aug": "Agosto",
+      "sep": "Settembre",
+      "oct": "Ottobre",
+      "nov": "Novembre",
+      "dec": "Dicembre"
+    },
+    "day": {
+      "mon": "Lunedì",
+      "tue": "Martedì",
+      "wed": "Mercoledì",
+      "thu": "Giovedì",
+      "fri": "Venerdì",
+      "sat": "Sabato",
+      "sun": "Domenica"
+    },
+    "input": {
+      "pandemic-select": "Seleziona una pandemia",
+      "country-select": "Seleziona un paese",
+      "select-export-format": "Seleziona il formato di esportazione"
+    },
+    "predict": {
+      "note": "Una volta generato il report, verrà aggiunto all'elenco dei report. Dovrai aggiornare i dati nella pagina principale per aggiornare i grafici.",
+      "button": "Genera Report",
+      "result": {
+        "title": "Risultato della Predizione AI",
+        "cases": "Nuovi casi: {{cases}}",
+        "deaths": "Nuovi decessi: {{deaths}}"
+      }
+    },
+    "dashboard": {
+      "refresh": "Aggiorna i grafici",
+      "export": "Esporta dati",
+      "filter-by-pandemic": "Filtra per pandemia",
+      "charts": {
+        "infection-by-continent": {
+          "name": "Infezioni per Continente"
+        },
+        "top-10-countries-by-deaths-cases": {
+          "name": "I 10 Paesi con più Decessi e Casi",
+          "inputs": {
+            "country": "Paesi",
+            "death-cases": "Decessi e casi"
+          }
+        },
+        "new-cases-deaths-over-time": {
+          "name": "Nuovi Casi e Decessi nel Tempo",
+          "inputs": {
+            "date": "Date",
+            "cases-deaths": "Decessi e casi"
+          }
+        }
+      }
+    }
+  }
+}

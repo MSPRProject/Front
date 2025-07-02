@@ -30,8 +30,13 @@
   >
     <div class="flex justify-between items-center mb-2">
       <div>
-        <span class="text-lg font-bold text-gray-800 dark:text-white">{{ MONTH_NAMES[month] }}</span>
-        <span class="ml-1 text-lg text-gray-600 font-normal dark:text-gray-300">{{ year }}</span>
+        <span class="text-lg font-bold text-gray-800 dark:text-white">{{
+          MONTH_NAMES[month] | translate
+        }}</span>
+        <span
+          class="ml-1 text-lg text-gray-600 font-normal dark:text-gray-300"
+          >{{ year }}</span
+        >
       </div>
       <div>
         <button
@@ -89,7 +94,8 @@
             class="self-center text-center text-sm rounded-full leading-loose transition ease-in-out duration-100"
             [ngClass]="{
               'bg-blue-500 text-white': isToday(date),
-              'text-gray-700 hover:bg-blue-200 dark:text-gray-200 dark:hover:bg-blue-700': !isToday(date),
+              'text-gray-700 hover:bg-blue-200 dark:text-gray-200 dark:hover:bg-blue-700':
+                !isToday(date),
             }"
           >
             {{ date }}

@@ -5,13 +5,15 @@
     <button
       (click)="pruneCache()"
       class="bg-blue-500 hover:bg-blue-600 dark:bg-gray-800 dark:hover:bg-blue-600 text-white dark:text-gray-300 dark:hover:text-white font-semibold py-2 px-4 border border-blue-500 hover-border-blue-600 dark:border-gray-700 dark:hover:border-blue-600 rounded transition-colors duration-300"
+      translate
     >
-      Actualiser les données
+      app.dashboard.refresh
     </button>
 
     <div class="space-x-8">
       <select
-        aria-label="Sélectionner le format d'exportation"
+        aria-label="app.input.select-export-format"
+        aria-label-translate
         class="bg-white text-black dark:bg-gray-800 dark:text-white border dark:border-gray-600 p-2 rounded"
         name="exportFormat"
         id="exportFormat"
@@ -23,8 +25,9 @@
       <button
         (click)="export()"
         class="bg-blue-500 hover:bg-blue-600 dark:bg-gray-800 dark:hover:bg-blue-600 text-white dark:text-gray-300 dark:hover:text-white font-semibold py-2 px-4 border border-blue-500 hover-border-blue-600 dark:border-gray-700 dark:hover:border-blue-600 rounded transition-colors duration-300"
+        translate
       >
-        Exporter les données
+        app.dashboard.export
       </button>
     </div>
   </div>
@@ -32,7 +35,8 @@
   <div class="flex flex-row flex-wrap justify-around w-full">
     <div class="pb-10">
       <select
-        aria-label="Sélectionner la pandémie"
+        aria-label="app.input.pandemic-select"
+        aria-label-translate
         class="bg-white text-black dark:bg-gray-800 dark:text-white border dark:border-gray-600 p-2 rounded"
         name="infectionByContinentPandemic"
         id="infectionByContinentPandemic"
@@ -42,7 +46,8 @@
             this.infectionByContinentPandemic
           )
         "
-        placeholder="Sélectionner une pandémie"
+        placeholder="app.input.pandemic-select"
+        placeholder-translate
       >
         <option
           *ngFor="let pandemic of pandemics"
@@ -54,7 +59,7 @@
       <app-chart
         #infectionByContinentPandemicChart
         [source]="loadInfectionByContinent.bind(this)"
-        name="Infection by Continent"
+        name="app.dashboard.charts.infection-by-continent.name"
         [sourceParams]="infectionByContinentPandemic"
         [isDarkMode]="isDarkMode"
       ></app-chart>
@@ -65,7 +70,7 @@
         for="top10CountriesByDeathCasesFilter"
         class="flex flex-row justify-between"
       >
-        <span class="space-x-2">
+        <span class="space-x-2" translate>
           <input
             type="checkbox"
             [(ngModel)]="top10CountriesByDeathCasesFilter"
@@ -78,10 +83,11 @@
             name="top10CountriesByDeathCasesFilter"
             id="top10CountriesByDeathCasesFilter"
           />
-          Filtrer par pandémie
+          app.dashboard.filter-by-pandemic
         </span>
         <select
-          aria-label="Sélectionner la pandémie"
+          aria-label="app.input.pandemic-select"
+          aria-label-translate
           class="bg-white text-black dark:bg-gray-800 dark:text-white border dark:border-gray-600 p-2 rounded"
           name="top10CountriesByDeathCasesPandemic"
           id="top10CountriesByDeathCasesPandemic"
@@ -94,8 +100,8 @@
           "
           [disabled]="!top10CountriesByDeathCasesFilter"
         >
-          <option [ngValue]="null" hidden disabled>
-            Sélectionnez une pandémie
+          <option [ngValue]="null" hidden disabled translate>
+            app.input.pandemic-select
           </option>
           <option
             *ngFor="let pandemic of pandemics"
@@ -108,13 +114,17 @@
       <app-chart
         #top10CountriesByDeathCasesChart
         [source]="loadTop10CountriesByDeathCases.bind(this)"
-        name="Top 10 Countries by Death and Cases"
+        name="app.dashboard.charts.top-10-countries-by-deaths-cases.name"
         [sourceParams]="[
           top10CountriesByDeathCasesFilter,
           top10CountriesByDeathCasesPandemic,
         ]"
-        [xAxisLabel]="'Pays'"
-        [yAxisLabel]="'Nombre de cas et décès'"
+        [xAxisLabel]="
+          'app.dashboard.charts.top-10-countries-by-deaths-cases.inputs.country'
+        "
+        [yAxisLabel]="
+          'app.dashboard.charts.top-10-countries-by-deaths-cases.inputs.death-cases'
+        "
         [isDarkMode]="isDarkMode"
       ></app-chart>
     </div>
@@ -126,7 +136,8 @@
       >
         <span class="space-x-2">
           <select
-            aria-label="Sélectionner la pandémie"
+            aria-label="app.input.pandemic-select"
+            aria-label-translate
             class="bg-white text-black dark:bg-gray-800 dark:text-white border dark:border-gray-600 p-2 rounded"
             name="newCasesDeathsOverTimePandemic"
             id="newCasesDeathsOverTimePandemic"
@@ -146,7 +157,8 @@
             ></option>
           </select>
           <select
-            aria-label="Sélectionner le pays"
+            aria-label="app.input.country-select"
+            aria-label-translate
             class="bg-white text-black dark:bg-gray-800 dark:text-white border dark:border-gray-600 p-2 rounded"
             name="newCasesDeathsOverTimeCountry"
             id="newCasesDeathsOverTimeCountry"
@@ -170,14 +182,18 @@
       <app-chart
         #newCasesDeathsOverTimeChart
         [source]="loadNewCasesDeathsOverTime.bind(this)"
-        name="New Cases and Deaths Over Time"
+        name="app.dashboard.charts.new-cases-deaths-over-time.name"
         [sourceParams]="[
           newCasesDeathsOverTimePandemic,
           newCasesDeathsOverTimeCountry,
         ]"
         width="1200"
-        [xAxisLabel]="'Temps (jours)'"
-        [yAxisLabel]="'Nombre de cas et décès'"
+        [xAxisLabel]="
+          'app.dashboard.charts.new-cases-deaths-over-time.inputs.date'
+        "
+        [yAxisLabel]="
+          'app.dashboard.charts.new-cases-deaths-over-time.inputs.cases-deaths'
+        "
         [isDarkMode]="isDarkMode"
       ></app-chart>
     </div>
