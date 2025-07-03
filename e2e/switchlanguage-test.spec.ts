@@ -14,7 +14,6 @@ test.describe('Switch Language', () => {
   for (let i = 0; i < LANGS.length; i++) {
     const lang = LANGS[i];
     test(`should display correct "Refresh" text in ${lang}`, async ({ page }) => {
-      // Charge la traduction JSON pour la langue
       const jsonPath = path.join(process.cwd(), 'public', 'i18n', `${lang}.json`);
       const fileContent = fs.readFileSync(jsonPath, 'utf-8');
       const translations = JSON.parse(fileContent);
