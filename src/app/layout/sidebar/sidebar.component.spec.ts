@@ -4,6 +4,7 @@ import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { ActivatedRoute } from '@angular/router';
 import { of } from 'rxjs';
+import { TranslateModule } from '@ngx-translate/core';
 
 describe('SidebarComponent', () => {
   let component: SidebarComponent;
@@ -11,7 +12,7 @@ describe('SidebarComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [SidebarComponent, RouterTestingModule],
+      imports: [SidebarComponent, RouterTestingModule, TranslateModule.forRoot()],
       providers: [
         provideHttpClientTesting(),
         {

@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DatePicker } from './date-picker.component';
+import { TranslateModule } from '@ngx-translate/core'; 
 
 describe('DatePickerComponent', () => {
   let component: DatePicker;
@@ -7,7 +8,10 @@ describe('DatePickerComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [DatePicker], 
+      imports: [
+        DatePicker,
+        TranslateModule.forRoot()
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(DatePicker);
