@@ -22,7 +22,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     private themeService: ThemeService,
     private translate: TranslateService,
   ) {
-    this.translate.addLangs(["en", "fr"]);
+    this.translate.addLangs(["en", "fr", "de", "it"]);
     this.translate.setDefaultLang("en");
     this.translate.use("en");
   }

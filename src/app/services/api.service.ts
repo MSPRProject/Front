@@ -1,10 +1,11 @@
-import { Injectable } from "@angular/core";
+import { EnvironmentInjector, Injectable } from "@angular/core";
 import { HttpClient, HttpHeaders, HttpResponse } from "@angular/common/http";
 import { EMPTY, Observable, of } from "rxjs";
 import { map, catchError, expand, reduce } from "rxjs/operators";
 import { Pandemic } from "../models/pandemic";
 import { Country } from "../models/country";
 import { Report } from "../models/report";
+import { environment } from "../../environments/environment";
 
 interface ApiGenericResponseList {
   _embedded: { [key: string]: any };
@@ -50,8 +51,7 @@ interface ApiCountryResponse {
   providedIn: "root",
 })
 export class ApiService {
-  private apiUrl = "http://localhost:8080";
-
+  private apiUrl: string = environment.apiUrl;
   constructor(private http: HttpClient) {}
 
   predict(
@@ -241,11 +241,11 @@ export class ApiService {
    * @param predictData Données au format attendu par l'API IA (voir README IA)
    */
   postPredict(predictData: any): Observable<any> {
-    const iaApiUrl = 'http://localhost:8000/predict';
-    const token = localStorage.getItem('ia_bearer_token') || '';
+    const iaApiUrl = "http://localhost:8000/predict";
+    const token = localStorage.getItem("ia_bearer_token") || "";
     const headers = new HttpHeaders({
-      'Authorization': `Bearer ${token}`,
-      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
     });
     return this.http.post<any>(iaApiUrl, predictData, { headers });
   }

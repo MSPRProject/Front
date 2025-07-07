@@ -51,7 +51,7 @@ export class DatePicker {
   date = output<Date>();
 
   constructor(private translate: TranslateService) {
-    this.translate.addLangs(["en", "fr"]);
+    this.translate.addLangs(["en", "fr", "de", "it"]);
     this.translate.setDefaultLang("en");
     this.translate.use("en");
     this.translate.onLangChange.subscribe((lang) => {
