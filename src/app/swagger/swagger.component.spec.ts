@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { SwaggerComponent } from './swagger.component';
+import { TranslateModule } from '@ngx-translate/core';
 
 describe('SwaggerComponent', () => {
   let component: SwaggerComponent;
@@ -7,7 +8,7 @@ describe('SwaggerComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [SwaggerComponent],
+      imports: [SwaggerComponent, TranslateModule.forRoot()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(SwaggerComponent);
