@@ -54,7 +54,7 @@ jobs:
           distribution: 'temurin'
           cache: 'maven'
 
-      - name: Run backend tests (Maven)
+      - name: Run backend tests
         run: mvn clean test
         working-directory: API
 
@@ -80,7 +80,7 @@ jobs:
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: Front/*
+          publish_dir: Front/src
 
   deploy:
     runs-on: ubuntu-latest
