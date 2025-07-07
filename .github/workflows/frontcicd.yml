@@ -17,7 +17,7 @@ jobs:
 
       - name: Install dependencies
         run: npm install
-        working-directory: ./Front
+        working-directory: /Front
 
       - name: Run Angular unit tests
         run: npm run test -- --watch=false --browsers=ChromeHeadless
@@ -25,7 +25,7 @@ jobs:
 
       - name: Build Angular app
         run: npm run build
-        working-directory: ./Front
+        working-directory: ./
 
   gh-pages-deploy:
     runs-on: ubuntu-latest
@@ -43,7 +43,7 @@ jobs:
         run: |
           npm install
           npm run build
-        working-directory: ./Front
+        working-directory: ./
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
