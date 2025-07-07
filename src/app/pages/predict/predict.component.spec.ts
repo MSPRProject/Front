@@ -10,7 +10,7 @@ describe('PredictComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [
-        PredictComponent, // ✅ car c'est un composant standalone
+        PredictComponent,
         HttpClientTestingModule,
         TranslateModule.forRoot({
           loader: { provide: TranslateLoader, useClass: TranslateFakeLoader }

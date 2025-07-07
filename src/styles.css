@@ -30,4 +30,7 @@ body.dark-mode nav a:hover
 {
     background-color: #111; /* un petit gris très foncé pour hover */
 }
-  
+
+select:hover, date-picker:hover, date-picker:focus {
+    cursor: pointer;
+}

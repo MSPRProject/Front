@@ -1,0 +1,70 @@
+{
+  "app": {
+    "sidebar": {
+      "dashboard": "Dashboard",
+      "predict": "Predict",
+      "api-doc": "API Docs"
+    },
+    "month": {
+      "jan": "January",
+      "feb": "February",
+      "mar": "March",
+      "apr": "April",
+      "may": "May",
+      "jun": "June",
+      "jul": "July",
+      "aug": "August",
+      "sep": "September",
+      "oct": "October",
+      "nov": "November",
+      "dec": "December"
+    },
+    "day": {
+      "mon": "Monday",
+      "tue": "Tuesday",
+      "wed": "Wednesday",
+      "thu": "Thursday",
+      "fri": "Friday",
+      "sat": "Saturday",
+      "sun": "Sunday"
+    },
+    "input": {
+      "pandemic-select": "Select a pandemic",
+      "country-select": "Select a country",
+      "select-export-format": "Select export format"
+    },
+    "predict": {
+      "note": "Once the report is generated, it will be added to the list of reports. You will need to refresh the data on the main page to update the charts.",
+      "button": "Generate Report",
+      "result": {
+        "title": "AI Prediction Result",
+        "cases": "New cases: {{cases}}",
+        "deaths": "New deaths: {{deaths}}"
+      }
+    },
+    "dashboard": {
+      "refresh": "Refresh graphs",
+      "export": "Export data",
+      "filter-by-pandemic": "Filter by pandemic",
+      "charts": {
+        "infection-by-continent": {
+          "name": "Infections by Continent"
+        },
+        "top-10-countries-by-deaths-cases": {
+          "name": "Top 10 Countries by Deaths and Cases",
+          "inputs": {
+            "country": "Countries",
+            "death-cases": "Deaths and cases"
+          }
+        },
+        "new-cases-deaths-over-time": {
+          "name": "New Cases and Deaths Over Time",
+          "inputs": {
+            "date": "Dates",
+            "cases-deaths": "Deaths and cases"
+          }
+        }
+      }
+    }
+  }
+}
