@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { TranslateModule, TranslateLoader, TranslateFakeLoader } from '@ngx-translate/core';
 import { PredictComponent } from './predict.component';
 
 describe('PredictComponent', () => {
@@ -8,9 +9,14 @@ describe('PredictComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [PredictComponent]
-    })
-    .compileComponents();
+      imports: [
+        PredictComponent,
+        HttpClientTestingModule,
+        TranslateModule.forRoot({
+          loader: { provide: TranslateLoader, useClass: TranslateFakeLoader }
+        })
+      ]
+    }).compileComponents();
 
     fixture = TestBed.createComponent(PredictComponent);
     component = fixture.componentInstance;
