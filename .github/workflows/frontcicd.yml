@@ -17,11 +17,11 @@ jobs:
 
       - name: Install dependencies
         run: npm install
-        working-directory: /Front
+        working-directory: ./
 
       - name: Run Angular unit tests
         run: npm run test -- --watch=false --browsers=ChromeHeadless
-        working-directory: ./Front
+        working-directory: ./
 
       - name: Build Angular app
         run: npm run build
@@ -49,7 +49,7 @@ jobs:
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./Front
+          publish_dir: ./
 
   deploy:
     runs-on: ubuntu-latest
