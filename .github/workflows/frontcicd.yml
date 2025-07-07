@@ -56,7 +56,7 @@ jobs:
 
   deploy:
     runs-on: ubuntu-latest
-    needs: [test, frontend-build-and-test, gh-pages-deploy]
+    needs: [frontend-build-and-test, gh-pages-deploy] 
     steps:
       - name: Final deployment
         run: echo "✅ Deployment done"
