@@ -12,6 +12,7 @@ import { ThemeService } from "./services/theme.service";
   styleUrls: ["./app.component.css"],
 })
 export class AppComponent {
+  title = "Sanalyz_front";
   constructor(private themeService: ThemeService) {
     this.themeService.initializeTheme();
   }
