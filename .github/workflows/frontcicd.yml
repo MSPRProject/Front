@@ -59,4 +59,4 @@ jobs:
     needs: [frontend-build-and-test, gh-pages-deploy] 
     steps:
       - name: Final deployment
-        run: echo "✅ Deployment done"
+        run: echo "Deployment done"
