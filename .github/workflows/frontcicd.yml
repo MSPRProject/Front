@@ -1,10 +1,6 @@
-name: CI/CD Pipeline
+name: Test CI trigger
 
-on:
-  push:
-    branches: [main]
-  pull_request:
-    branches: [main]
+on: [push]
 
 jobs:
   frontend-build-and-test:
@@ -12,6 +8,7 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+      - run: echo "Workflow triggered!"
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
@@ -56,7 +53,7 @@ jobs:
 
   deploy:
     runs-on: ubuntu-latest
-    needs: [frontend-build-and-test, gh-pages-deploy] 
+    needs: [job, frontend-build-and-test, gh-pages-deploy] 
     steps:
       - name: Final deployment
         run: echo "Deployment done"
