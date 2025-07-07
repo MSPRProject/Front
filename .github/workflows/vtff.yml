@@ -1,0 +1,62 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  frontend-build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '21'
+
+      - name: Install dependencies
+        run: npm install
+        working-directory: Front
+
+      - name: Run Angular unit tests
+        run: npm run test -- --watch=false --browsers=ChromeHeadless
+        working-directory: Front
+
+      - name: Build Angular app
+        run: npm run build
+        working-directory: Front
+
+  gh-pages-deploy:
+    runs-on: ubuntu-latest
+    needs: frontend-build-and-test
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '21'
+
+      - name: Build Angular app
+        run: |
+          npm install
+          npm run build
+        working-directory: Front
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: Front/dist
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: [frontend-build-and-test, gh-pages-deploy] 
+    steps:
+      - name: Final deployment
+        run: echo "Deployment done"
