@@ -2,6 +2,9 @@ name: Test CI trigger
 
 on: [push]
 
+permissions:
+  contents: write
+
 jobs:
   frontend-build-and-test:
     runs-on: ubuntu-latest
