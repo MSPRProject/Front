@@ -19,8 +19,6 @@ describe('DatePicker', () => {
     }).compileComponents();
 
     fixture = TestBed.createComponent(DatePicker);
-
-
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

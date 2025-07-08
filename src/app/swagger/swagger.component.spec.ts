@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { SwaggerComponent } from './swagger.component';
+import { TranslateModule } from '@ngx-translate/core';
 
 describe('SwaggerComponent', () => {
   let component: SwaggerComponent;
@@ -8,9 +8,8 @@ describe('SwaggerComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [SwaggerComponent]
-    })
-    .compileComponents();
+      imports: [SwaggerComponent, TranslateModule.forRoot()],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(SwaggerComponent);
     component = fixture.componentInstance;
@@ -19,5 +18,14 @@ describe('SwaggerComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should render swagger container with iframe', () => {
+    const container = fixture.nativeElement.querySelector('.swagger-container');
+    expect(container).toBeTruthy();
+
+    const iframe = container.querySelector('iframe');
+    expect(iframe).toBeTruthy();
+    expect(iframe.src).toContain('swagger-ui/index.html');
   });
 });
