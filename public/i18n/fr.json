@@ -1,0 +1,70 @@
+{
+  "app": {
+    "sidebar": {
+      "dashboard": "Tableau de bord",
+      "predict": "Prédiction",
+      "api-doc": "Documentation API"
+    },
+    "month": {
+      "jan": "Janvier",
+      "feb": "Février",
+      "mar": "Mars",
+      "apr": "Avril",
+      "may": "Mai",
+      "jun": "Juin",
+      "jul": "Juillet",
+      "aug": "Août",
+      "sep": "Septembre",
+      "oct": "Octobre",
+      "nov": "Novembre",
+      "dec": "Décembre"
+    },
+    "day": {
+      "mon": "Lundi",
+      "tue": "Mardi",
+      "wed": "Mercredi",
+      "thu": "Jeudi",
+      "fri": "Vendredi",
+      "sat": "Samedi",
+      "sun": "Dimanche"
+    },
+    "input": {
+      "pandemic-select": "Sélectionnez une pandémie",
+      "country-select": "Sélectionnez un pays",
+      "select-export-format": "Sélectionnez le format d'exportation"
+    },
+    "predict": {
+      "note": "Une fois le rapport généré, il sera ajouté à la liste des rapports. Vous devrez actualiser les données sur la page principale pour mettre à jour les graphiques.",
+      "button": "Générer le rapport",
+      "result": {
+        "title": "Résultat de la prédiction de l'IA",
+        "cases": "Nouveaux cas : {{cases}}",
+        "deaths": "Nouveaux décès : {{deaths}}"
+      }
+    },
+    "dashboard": {
+      "refresh": "Actualiser les graphiques",
+      "export": "Exporter les données",
+      "filter-by-pandemic": "Filtrer par pandémie",
+      "charts": {
+        "infection-by-continent": {
+          "name": "Infections par continent"
+        },
+        "top-10-countries-by-deaths-cases": {
+          "name": "Top 10 des pays par décès et cas",
+          "inputs": {
+            "country": "Pays",
+            "death-cases": "Décès et cas"
+          }
+        },
+        "new-cases-deaths-over-time": {
+          "name": "Nouveaux cas et décès au fil du temps",
+          "inputs": {
+            "date": "Dates",
+            "cases-deaths": "Décès et cas"
+          }
+        }
+      }
+    }
+  }
+}
